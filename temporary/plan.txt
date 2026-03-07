@@ -1,0 +1,6 @@
+🔧 Faza 1 — Setup środowiska (30 min)
+🕷️ Faza 2 — Scrapers (2-3h)
+🧠 Faza 3 — RAG pipeline (2-3h)
+📝 Faza 4 — Digest & Alerty (2h)
+🚀 Faza 5 — Deployment (1h)
+🎯 Faza 6 — Polish pod hackathon (1h)

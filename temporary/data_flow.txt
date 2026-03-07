@@ -1,0 +1,15 @@
+[Profil firmy jako JSON input]
+        ↓
+[Apify Actor — scraping EUR-Lex, GDPR portals, national sources]
+        ↓
+[Chunking + Embeddings]
+        ↓
+[Relevance filtering — dopasowanie do profilu firmy]
+        ↓
+[RAG — retrieval + LLM via OpenRouter]
+        ↓
+[Digest generator + Alert engine]
+        ↓
+[JSON output: digest + alerty + rekomendacje]
+        ↓
+[Frontend demo — wizualizacja dla sędziów]

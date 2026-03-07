@@ -1,0 +1,70 @@
+import asyncio
+from apify_client import ApifyClient
+from apify import Actor
+from dotenv import load_dotenv
+import os
+
+from scrapers.eurlex_scraper import scrape_eurlex
+from processing.chunker import chunk_documents
+from processing.embedder import embed_chunks
+from processing.relevance_filter import filter_relevant
+from rag.retriever import retrieve
+from digest.digest_generator import generate_digest
+from digest.alert_engine import generate_alerts
+from digest.formatter import format_output
+
+load_dotenv()
+
+
+async def main():
+
+    async with Actor:
+
+        # Read company profile from input or use default
+        company_profile = await Actor.get_input() or {
+            "company_name": "TechStartup GmbH",
+            "industry": "fintech",
+            "country": "DE",
+            "size": "startup",
+            "areas_of_concern": ["GDPR", "AI Act", "PSD2"]
+        }
+
+        client = ApifyClient(token=os.getenv("APIFY_TOKEN"))
+
+        print(f"Vigil starting for: {company_profile['company_name']}")
+
+        # Step 1: Scraping
+        print("Scraping regulatory sources...")
+        raw_documents = await scrape_eurlex(client, company_profile)
+
+        # Step 2: Chunking
+        print("Chunking documents...")
+        chunks = chunk_documents(raw_documents)
+
+        # Step 3: Embedding and filtering
+        print("Embedding and filtering...")
+        embedded = embed_chunks(chunks)
+        relevant = filter_relevant(embedded, company_profile)
+
+        # Step 4: RAG retrieval
+        print("Retrieving relevant regulations...")
+        retrieved = retrieve(relevant, company_profile)
+
+        # Step 5: Generating digest and alerts
+        print("Generating digest and alerts...")
+        digest = generate_digest(retrieved, company_profile, client)
+        alerts = generate_alerts(retrieved, company_profile)
+
+        # Step 6: Output
+        output = format_output(digest, alerts, company_profile)
+        
+        # Save output to Apify dataset
+        await Actor.push_data(output)
+        
+        print("\nVIGIL DIGEST READY\n")
+        print(output)
+
+
+if __name__ == "__main__":
+    
+    asyncio.run(main())

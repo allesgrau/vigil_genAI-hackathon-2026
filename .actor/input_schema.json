@@ -1,0 +1,38 @@
+{
+    "title": "Vigil Input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "company_name": {
+            "title": "Company name",
+            "type": "string",
+            "description": "Name of your company",
+            "example": "TechStartup GmbH"
+        },
+        "industry": {
+            "title": "Industry",
+            "type": "string",
+            "description": "Your industry sector",
+            "example": "fintech"
+        },
+        "country": {
+            "title": "Country code",
+            "type": "string",
+            "description": "Two-letter country code",
+            "example": "DE"
+        },
+        "size": {
+            "title": "Company size",
+            "type": "string",
+            "enum": ["startup", "sme", "enterprise"],
+            "description": "Size of your company"
+        },
+        "areas_of_concern": {
+            "title": "Regulatory areas",
+            "type": "array",
+            "description": "Regulations you want to monitor",
+            "example": ["GDPR", "AI Act", "PSD2"]
+        }
+    },
+    "required": ["company_name", "industry", "country"]
+}

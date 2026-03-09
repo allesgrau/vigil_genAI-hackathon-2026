@@ -1,31 +1,31 @@
 vigil/
 │
-├── .actor/                          # Konfiguracja Apify Actora
-│   ├── actor.json                   # Metadata Actora (nazwa, opis, wersja)
-│   └── input_schema.json            # Schema inputu (profil firmy)
+├── (!).actor/                          # Konfiguracja Apify Actora
+│   ├── (!)actor.json                   # Metadata Actora (nazwa, opis, wersja)
+│   └── (!)input_schema.json            # Schema inputu (profil firmy)
 │
-├── src/
-│   ├── scrapers/                    # Moduły scrapujące
-│   │   ├── eurlex_scraper.py        # EUR-Lex (dyrektywy EU)
-│   │   ├── gdpr_scraper.py          # GDPR updates
-│   │   └── national_scraper.py      # Krajowe dzienniki ustaw
+├── (!)src/
+│   ├── (!)scrapers/                    # Moduły scrapujące
+│   │   ├── (!)eurlex_scraper.py        # EUR-Lex (dyrektywy EU)
+│   │   ├── (!)gdpr_scraper.py          # GDPR updates
+│   │   └── (!)national_scraper.py      # Krajowe dzienniki ustaw
 │   │
-│   ├── processing/                  # Przetwarzanie danych
-│   │   ├── chunker.py               # Dzielenie dokumentów na chunki
-│   │   ├── embedder.py              # Generowanie embeddingów
-│   │   └── relevance_filter.py      # Filtrowanie po profilu firmy
+│   ├── (!)processing/                  # Przetwarzanie danych
+│   │   ├── (!)chunker.py               # Dzielenie dokumentów na chunki
+│   │   ├── (!)embedder.py              # Generowanie embeddingów
+│   │   └── (!)relevance_filter.py      # Filtrowanie po profilu firmy
 │   │
-│   ├── rag/                         # RAG pipeline
-│   │   ├── vector_store.py          # In-memory vector store
-│   │   ├── retriever.py             # Retrieval logic
-│   │   └── prompt_templates.py      # Prompty do LLM
+│   ├── (!)rag/                         # RAG pipeline
+│   │   ├── (!)vector_store.py          # In-memory vector store
+│   │   ├── (!)retriever.py             # Retrieval logic
+│   │   └── (!)prompt_templates.py      # Prompty do LLM
 │   │
-│   ├── digest/                      # Generowanie outputu
-│   │   ├── digest_generator.py      # Cotygodniowy digest
-│   │   ├── alert_engine.py          # Alerty deadline'owe
-│   │   └── formatter.py             # Plain language formatter
+│   ├── (!)digest/                      # Generowanie outputu
+│   │   ├── (!)digest_generator.py      # Cotygodniowy digest
+│   │   ├── (!)alert_engine.py          # Alerty deadline'owe
+│   │   └── (!)formatter.py             # Plain language formatter
 │   │
-│   └── main.py                      # Entry point Actora
+│   └── (!)main.py                      # Entry point Actora
 │
 ├── tests/
 │   ├── test_scrapers.py
@@ -36,7 +36,7 @@ vigil/
 │   ├── index.html                   # Prosty frontend demo
 │   └── sample_output.json           # Przykładowy output
 │
-├── Dockerfile                       # Dla Apify deployment
-├── requirements.txt
+├── (!)Dockerfile                       # Dla Apify deployment
+├── (!)requirements.txt
 ├── README.md
 └── .env.example

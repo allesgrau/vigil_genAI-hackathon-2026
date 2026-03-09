@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import os
 
 from scrapers.eurlex_scraper import scrape_eurlex
+from scrapers.gdpr_scraper import scrape_gdpr
+from scrapers.national_scraper import scrape_national
 from processing.chunker import chunk_documents
 from processing.embedder import embed_chunks
 from processing.relevance_filter import filter_relevant
@@ -26,7 +28,8 @@ async def main():
             "industry": "fintech",
             "country": "DE",
             "size": "startup",
-            "areas_of_concern": ["GDPR", "AI Act", "PSD2"]
+            "areas_of_concern": ["GDPR", "AI Act", "PSD2"],
+            "test_mode": True
         }
 
         client = ApifyClient(token=os.getenv("APIFY_TOKEN"))
@@ -35,7 +38,13 @@ async def main():
 
         # Step 1: Scraping
         print("Scraping regulatory sources...")
-        raw_documents = await scrape_eurlex(client, company_profile)
+        test_mode = company_profile.get("test_mode", False)
+        eurlex_docs = await scrape_eurlex(client, company_profile, test_mode=test_mode)
+        gdpr_docs = await scrape_gdpr(client, company_profile, test_mode=test_mode)
+        national_docs = await scrape_national(client, company_profile, test_mode=test_mode)
+
+        raw_documents = eurlex_docs + gdpr_docs + national_docs
+        print(f"Total documents scraped: {len(raw_documents)}")  
 
         # Step 2: Chunking
         print("Chunking documents...")

@@ -4,3 +4,8 @@
 📝 Faza 4 — Digest & Alerty (2h)
 🚀 Faza 5 — Deployment (1h)
 🎯 Faza 6 — Polish pod hackathon (1h)
+
+może na końcu zastąpić embeddowanie chunków embeddowaniem faktów, tak jak w chatbocie MiNI?
+potem więcej krajów, więcej linków w scrapingu/processingu
+
+TODO: poprawić scrapers na test mode i ogarnąć co jest nie tak z proxy Apify

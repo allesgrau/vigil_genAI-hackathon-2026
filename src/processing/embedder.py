@@ -1,97 +1,78 @@
 import os
-import requests
 from typing import List
+from openai import OpenAI
+
+
+def _get_client() -> OpenAI:
+    return OpenAI(
+        base_url=os.getenv("OPENROUTER_ACTOR_URL", "https://openrouter.apify.actor/api/v1"),
+        api_key="no-key-required-but-must-not-be-empty",
+        default_headers={
+            "Authorization": f"Bearer {os.getenv('APIFY_TOKEN', '')}"
+        }
+    )
 
 
 def embed_chunks(chunks: List[dict]) -> List[dict]:
     """
-    Generates embeddings for each chunk using OpenRouter via Apify proxy.
-    We use the sentence-transformers model via HuggingFace — free and fast.
+    Generuje embeddingi dla każdego chunka używając OpenRouter przez Apify.
     """
-    
-    print(f"Embedding {len(chunks)} chunks...")
-    
+
+    print(f"🧠 Embedding {len(chunks)} chunks...")
+
+    client = _get_client()
     embedded = []
-    
+
     for i, chunk in enumerate(chunks):
         content = chunk.get("content", "")
-        
         if not content:
             continue
-        
-        embedding = _get_embedding(content)
-        
-        if embedding:
-            chunk["embedding"] = embedding
-            embedded.append(chunk)
-        
+
+        embedding = _get_embedding(client, content)
+        chunk["embedding"] = embedding
+        embedded.append(chunk)
+
         if (i + 1) % 10 == 0:
             print(f"  → Embedded {i + 1}/{len(chunks)} chunks")
-    
-    print(f"Successfully embedded {len(embedded)} chunks")
+
+    print(f"✅ Successfully embedded {len(embedded)} chunks")
     return embedded
 
 
-def _get_embedding(text: str) -> List[float] | None:
+def _get_embedding(client: OpenAI, text: str) -> List[float]:
     """
-    Retrieves embedding for the text via Apify OpenRouter proxy.
-    Fallback: simple TF-IDF-like representation if API is unavailable.
+    Pobiera embedding przez OpenRouter.
+    Fallback na simple_embedding jeśli API nie obsługuje embeddingów.
     """
-    
+
     try:
-        url = os.getenv("OPENROUTER_ACTOR_URL", "")
-        
-        if not url:
-            return _simple_embedding(text)
-        
-        response = requests.post(
-            url,
-            json={
-                "endpoint": "/embeddings",
-                "payload": {
-                    "model": "openai/text-embedding-3-small",
-                    "input": text[:2000]
-                }
-            },
-            timeout=30
+        response = client.embeddings.create(
+            model="openai/text-embedding-3-small",
+            input=text[:2000]
         )
-        
-        if response.status_code == 200:
-            data = response.json()
-            return data["data"][0]["embedding"]
-        else:
-            print(f"Embedding API error {response.status_code}, using fallback")
-            return _simple_embedding(text)
-            
+        return response.data[0].embedding
+
     except Exception as e:
-        print(f"Embedding error: {e}, using fallback")
+        print(f"⚠️ Embedding API error: {e}, using fallback")
         return _simple_embedding(text)
 
 
 def _simple_embedding(text: str) -> List[float]:
     """
-    Easy implementable fallback embedding — normalized bag of words.
-    Used when API is unavailable (e.g., local development).
+    Lokalny fallback — deterministyczny pseudo-embedding.
     """
-    
+
     import hashlib
     import math
-    
-    # Deterministic pseudo-embedding based on word frequencies and hashing.
-    # Not semantically meaningful, but provides a consistent vector for the same text.
-    words = text.lower().split()
-    word_freq = {}
-    for word in words:
-        word_freq[word] = word_freq.get(word, 0) + 1
-    
+
     vector = []
     for i in range(128):
         seed = hashlib.md5(f"{i}_{text[:100]}".encode()).hexdigest()
         value = int(seed[:8], 16) / (16**8)
         vector.append(value)
-    
+
     magnitude = math.sqrt(sum(v**2 for v in vector))
     if magnitude > 0:
         vector = [v / magnitude for v in vector]
-    
+
     return vector

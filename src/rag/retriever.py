@@ -61,37 +61,25 @@ def _build_query(company_profile: dict) -> str:
 
 
 def _get_query_embedding(query: str) -> List[float] | None:
-    """
-    Gets the embedding for the query through the OpenRouter/Apify proxy.
-    """
+    from openai import OpenAI
 
     try:
-        url = os.getenv("OPENROUTER_ACTOR_URL", "")
-
-        if not url:
-            return None
-
-        response = requests.post(
-            url,
-            json={
-                "endpoint": "/embeddings",
-                "payload": {
-                    "model": "openai/text-embedding-3-small",
-                    "input": query
-                }
-            },
-            timeout=30
+        client = OpenAI(
+            base_url=os.getenv("OPENROUTER_ACTOR_URL", "https://openrouter.apify.actor/api/v1"),
+            api_key="no-key-required-but-must-not-be-empty",
+            default_headers={
+                "Authorization": f"Bearer {os.getenv('APIFY_TOKEN', '')}"
+            }
         )
 
-        if response.status_code == 200:
-            data = response.json()
-            return data["data"][0]["embedding"]
-        else:
-            print(f"Query embedding failed: {response.status_code}")
-            return None
+        response = client.embeddings.create(
+            model="openai/text-embedding-3-small",
+            input=query
+        )
+        return response.data[0].embedding
 
     except Exception as e:
-        print(f"Query embedding error: {e}")
+        print(f"⚠️ Query embedding error: {e}")
         return None
 
 

@@ -85,16 +85,21 @@ def _detect_keyword_alerts(chunks: List[dict], company_profile: dict) -> List[di
 
 def _detect_llm_alerts(chunks: List[dict], company_profile: dict) -> List[dict]:
     """
-    LLM-based alert detection — more accurate but slower.
-    Uses top 5 chunks to save credits.
+    LLM-based detekcja alertów — dokładniejsza ale wolniejsza.
+    Używa top 5 chunków żeby oszczędzać kredyty.
     """
 
     try:
-        actor_url = os.getenv("OPENROUTER_ACTOR_URL", "")
-        if not actor_url:
-            return []
+        from openai import OpenAI
 
-        # Use only top 5 most relevant chunks
+        openai_client = OpenAI(
+            base_url="https://openrouter.apify.actor/api/v1",
+            api_key="no-key-required-but-must-not-be-empty",
+            default_headers={
+                "Authorization": f"Bearer {os.getenv('APIFY_TOKEN', '')}"
+            }
+        )
+
         top_chunks = chunks[:5]
         context = "\n\n".join([
             f"Title: {c.get('title', '')}\n{c.get('content', '')[:500]}"
@@ -103,28 +108,15 @@ def _detect_llm_alerts(chunks: List[dict], company_profile: dict) -> List[dict]:
 
         prompt = get_alert_prompt(company_profile, context)
 
-        response = requests.post(
-            actor_url,
-            json={
-                "endpoint": "/chat/completions",
-                "payload": {
-                    "model": "anthropic/claude-3-haiku",
-                    "max_tokens": 800,
-                    "messages": [
-                        {"role": "user", "content": prompt}
-                    ]
-                }
-            },
-            timeout=45
+        response = openai_client.chat.completions.create(
+            model="anthropic/claude-3-haiku",
+            max_tokens=800,
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
         )
 
-        if response.status_code != 200:
-            return []
-
-        data = response.json()
-        raw_content = data["choices"][0]["message"]["content"]
-
-        # Parse the LLM response, which should be a JSON array of alerts
+        raw_content = response.choices[0].message.content
         alerts = _parse_llm_alerts(raw_content)
         for alert in alerts:
             alert["detection_method"] = "llm"
@@ -132,7 +124,7 @@ def _detect_llm_alerts(chunks: List[dict], company_profile: dict) -> List[dict]:
         return alerts
 
     except Exception as e:
-        print(f"LLM alert detection failed: {e}")
+        print(f"⚠️ LLM alert detection failed: {e}")
         return []
 
 

@@ -5,7 +5,8 @@
 🚀 Faza 5 — Deployment (1h)
 🎯 Faza 6 — Polish pod hackathon (1h)
 
-może na końcu zastąpić embeddowanie chunków embeddowaniem faktów, tak jak w chatbocie MiNI?
-potem więcej krajów, więcej linków w scrapingu/processingu
-
-TODO: poprawić scrapers na test mode i ogarnąć co jest nie tak z proxy Apify
+1. fact-based embeddings jak w chatbocie MiNI
+2. więcej krajów i więcej linków do scrapowania
+3. ładniejszy frontend (ładniejsza strona główna i wgl profesjonalniej)
+4. obsługa wielu języków obcych
+5. szybsze działanie

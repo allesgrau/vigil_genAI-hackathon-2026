@@ -1,35 +1,34 @@
 from apify_client import ApifyClient
 
 
-async def scrape_gdpr(client: ApifyClient, company_profile: dict) -> list[dict]:
-    """
-    Scrape GDPR-specific sources:
-    - gdpr.eu — practical guides and checklists
-    - edpb.europa.eu — European Data Protection Board (official opinions)
-    - iapp.org — industry news about privacy
-    """
+async def scrape_gdpr(client: ApifyClient, company_profile: dict, test_mode: bool = True) -> list[dict]:
 
     country = company_profile.get("country", "").upper()
 
-    start_urls = [
-        "https://edpb.europa.eu/news/news_en",
-        "https://edpb.europa.eu/our-work-tools/our-documents/guidelines_en",
-        "https://gdpr.eu/what-is-gdpr/",
-        "https://gdpr.eu/checklist/",
-    ]
+    if test_mode:
+        start_urls = ["https://gdpr.eu/what-is-gdpr/"]
+        max_pages = 3
+        max_depth = 0
+    else:
+        start_urls = [
+            "https://edpb.europa.eu/news/news_en",
+            "https://edpb.europa.eu/our-work-tools/our-documents/guidelines_en",
+            "https://gdpr.eu/what-is-gdpr/",
+            "https://gdpr.eu/checklist/",
+        ]
+        national_dpa = _get_national_dpa(country)
+        if national_dpa:
+            start_urls.append(national_dpa)
+        max_pages = 20
+        max_depth = 1
 
-    # Add national DPA website if country is known and supported
-    national_dpa = _get_national_dpa(country)
-    if national_dpa:
-        start_urls.append(national_dpa)
-
-    print(f"Scraping GDPR sources ({len(start_urls)} URLs)...")
+    print(f"📡 Scraping GDPR sources {'[TEST MODE]' if test_mode else ''} ({len(start_urls)} URLs)...")
 
     run = client.actor("apify/website-content-crawler").call(
         run_input={
             "startUrls": [{"url": url} for url in start_urls],
-            "maxCrawlDepth": 1,
-            "maxCrawlPages": 20,
+            "maxCrawlDepth": max_depth,
+            "maxCrawlPages": max_pages,
             "outputFormats": ["markdown"],
             "removeCookieWarnings": True,
             "blockAds": True,
@@ -47,14 +46,11 @@ async def scrape_gdpr(client: ApifyClient, company_profile: dict) -> list[dict]:
                 "source": "gdpr"
             })
 
-    print(f"craped {len(documents)} GDPR documents")
+    print(f"✅ Scraped {len(documents)} GDPR documents")
     return documents
 
 
 def _get_national_dpa(country: str) -> str | None:
-    """
-    Returns the URL of the national Data Protection Authority (DPA) for a given country.
-    """
 
     dpa_urls = {
         "DE": "https://www.bfdi.bund.de/EN/Home/home_node.html",

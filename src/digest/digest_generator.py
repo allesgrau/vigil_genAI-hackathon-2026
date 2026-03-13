@@ -56,62 +56,30 @@ def generate_digest(chunks: List[dict], company_profile: dict, client: ApifyClie
 
 
 def _call_llm(prompt: str, client: ApifyClient, max_tokens: int = 1000) -> str | None:
-    """
-    Calls the LLM to generate text based on the provided prompt.
-    First tries through Apify OpenRouter Actor, then falls back to direct API call if needed.
-    """
-
-    # Method 1: Direct API call to OpenRouter Actor (faster if available)
     try:
-        actor_url = os.getenv("OPENROUTER_ACTOR_URL", "")
-
-        if actor_url:
-            response = requests.post(
-                actor_url,
-                json={
-                    "endpoint": "/chat/completions",
-                    "payload": {
-                        "model": "anthropic/claude-3-haiku",
-                        "max_tokens": max_tokens,
-                        "messages": [
-                            {"role": "user", "content": prompt}
-                        ]
-                    }
-                },
-                timeout=60
-            )
-
-            if response.status_code == 200:
-                data = response.json()
-                return data["choices"][0]["message"]["content"]
-            else:
-                print(f"OpenRouter Actor error: {response.status_code}")
-
-    except Exception as e:
-        print(f"OpenRouter Actor failed: {e}")
-
-    # Method 2: Through Apify Actor run (fallback)
-    try:
-        run = client.actor("apify/openrouter").call(
-            run_input={
-                "model": "anthropic/claude-3-haiku",
-                "max_tokens": max_tokens,
-                "messages": [
-                    {"role": "user", "content": prompt}
-                ]
+        from openai import OpenAI
+        
+        openai_client = OpenAI(
+            base_url="https://openrouter.apify.actor/api/v1",
+            api_key="no-key-required-but-must-not-be-empty",
+            default_headers={
+                "Authorization": f"Bearer {os.getenv('APIFY_TOKEN', '')}"
             }
         )
 
-        dataset = client.dataset(run["defaultDatasetId"])
-        items = list(dataset.iterate_items())
+        response = openai_client.chat.completions.create(
+            model="anthropic/claude-3-haiku",
+            max_tokens=max_tokens,
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
 
-        if items:
-            return items[0].get("content", "")
+        return response.choices[0].message.content
 
     except Exception as e:
-        print(f"Apify Actor run failed: {e}")
-
-    return None
+        print(f"⚠️ LLM call failed: {e}")
+        return None
 
 
 def _build_context(chunks: List[dict]) -> str:

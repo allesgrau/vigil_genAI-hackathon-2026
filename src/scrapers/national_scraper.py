@@ -1,28 +1,31 @@
 from apify_client import ApifyClient
 
 
-async def scrape_national(client: ApifyClient, company_profile: dict) -> list[dict]:
-    """
-    Scrape national regulatory sources based on the company's country.
-    Each country has its own set of legal journals and government portals.
-    """
+async def scrape_national(client: ApifyClient, company_profile: dict, test_mode: bool = True) -> list[dict]:
 
     country = company_profile.get("country", "").upper()
     industry = company_profile.get("industry", "").lower()
-
     start_urls = _get_national_urls(country, industry)
 
     if not start_urls:
         print(f"⚠️ No national sources configured for country: {country}")
         return []
 
-    print(f"Scraping national sources for {country} ({len(start_urls)} URLs)...")
+    if test_mode:
+        start_urls = start_urls[:1]
+        max_pages = 3
+        max_depth = 0
+    else:
+        max_pages = 15
+        max_depth = 1
+
+    print(f"📡 Scraping national sources for {country} {'[TEST MODE]' if test_mode else ''} ({len(start_urls)} URLs)...")
 
     run = client.actor("apify/website-content-crawler").call(
         run_input={
             "startUrls": [{"url": url} for url in start_urls],
-            "maxCrawlDepth": 1,
-            "maxCrawlPages": 15,
+            "maxCrawlDepth": max_depth,
+            "maxCrawlPages": max_pages,
             "outputFormats": ["markdown"],
             "removeCookieWarnings": True,
             "blockAds": True,
@@ -40,14 +43,11 @@ async def scrape_national(client: ApifyClient, company_profile: dict) -> list[di
                 "source": f"national_{country.lower()}"
             })
 
-    print(f"Scraped {len(documents)} national documents for {country}")
+    print(f"✅ Scraped {len(documents)} national documents for {country}")
     return documents
 
 
 def _get_national_urls(country: str, industry: str) -> list[str]:
-    """
-    Map country and industry to specific URLs of national sources.
-    """
 
     base_urls = {
         "DE": [
@@ -77,7 +77,6 @@ def _get_national_urls(country: str, industry: str) -> list[str]:
         ],
     }
 
-    # Industry-specific sources (if any)
     industry_urls = {
         "DE": {
             "fintech": [
@@ -95,8 +94,6 @@ def _get_national_urls(country: str, industry: str) -> list[str]:
     }
 
     urls = base_urls.get(country, []).copy()
-
-    # Add industry-specific URLs if available
     country_industry = industry_urls.get(country, {})
     urls.extend(country_industry.get(industry, []))
 

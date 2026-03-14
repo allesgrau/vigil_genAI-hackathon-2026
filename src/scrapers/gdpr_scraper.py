@@ -32,7 +32,8 @@ async def scrape_gdpr(client: ApifyClient, company_profile: dict, test_mode: boo
             "outputFormats": ["markdown"],
             "removeCookieWarnings": True,
             "blockAds": True,
-        }
+        },
+        memory_mbytes=2048
     )
 
     documents = []

@@ -5,10 +5,8 @@
 🚀 Faza 5 — Deployment (1h)
 🎯 Faza 6 — Polish pod hackathon (1h)
 
-1. fact-based embeddings jak w chatbocie MiNI
-2. więcej krajów i więcej linków do scrapowania
-3. ładniejszy frontend (ładniejsza strona główna i wgl profesjonalniej)
-4. obsługa wielu języków obcych
-5. szybsze działanie
-
-publikacja Actor
+1. więcej krajów i więcej linków do scrapowania
+2. może dodać jakieś jeszcze ważne parametry w panelu po lewej, np. jaki to jest rodzaj spółki
+3. obsługa wielu języków obcych
+4. demo/ praz tests/ do zrobienia
+5. hackathonowy polish

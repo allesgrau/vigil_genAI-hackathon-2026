@@ -3,12 +3,17 @@ def get_digest_prompt(company_profile: dict, context: str) -> str:
     Prompt to generate a weekly regulatory digest for a European SME based on recent regulatory documents and the company's profile.
     """
 
+    from datetime import datetime
+    today = datetime.now().strftime("%B %d, %Y")  # "March 14, 2026"
+
     company = company_profile.get("company_name", "the company")
     industry = company_profile.get("industry", "general")
     country = company_profile.get("country", "EU")
     areas = ", ".join(company_profile.get("areas_of_concern", []))
 
     return f"""You are Vigil, an expert regulatory intelligence assistant for European SMEs.
+Today's date is {today}. Only flag deadlines that are in the FUTURE relative to today.
+Never return deadlines from the past (before {today}).
 Your job is to analyze recent regulatory developments and explain them in clear, actionable business language.
 
 COMPANY PROFILE:
@@ -53,15 +58,16 @@ IMPORTANT RULES:
 
 
 def get_alert_prompt(company_profile: dict, context: str) -> str:
-    """
-    Prompt to generate urgent alers — when a deadline is before the next digest.
-    """
-
+    from datetime import datetime
+    today = datetime.now().strftime("%B %d, %Y")  # "March 14, 2026"
+    
     company = company_profile.get("company_name", "the company")
     industry = company_profile.get("industry", "general")
     country = company_profile.get("country", "EU")
 
     return f"""You are Vigil, a regulatory compliance assistant.
+Today's date is {today}. Only flag deadlines that are in the FUTURE relative to today.
+Never return deadlines from the past (before {today}).
 Analyze the following regulatory documents and identify URGENT items only.
 
 COMPANY PROFILE:
@@ -73,7 +79,7 @@ REGULATORY DOCUMENTS:
 {context}
 
 YOUR TASK:
-Identify regulations that require action within the next 7 days.
+Identify regulations that require action within the next 7 days from today ({today}).
 For each urgent item output ONLY a JSON array like this:
 
 [
@@ -91,27 +97,50 @@ Return ONLY the JSON array, no other text.
 """
 
 
-def get_plain_language_prompt(regulation_text: str, company_profile: dict) -> str:
+def get_plain_language_prompt(regulation_text: str, company_profile: dict, mode: str = "change") -> str:
     """
-    Prompt to translate legal jargon into plain language.
-    Used for describing individual regulatory changes.
+    mode="change" — opisuje co się zmieniło (dla digest plain summaries)
+    mode="explainer" — opisuje czym jest regulacja (dla regulation library)
     """
 
+    from datetime import datetime
+    today = datetime.now().strftime("%B %d, %Y")
     industry = company_profile.get("industry", "general")
     country = company_profile.get("country", "EU")
 
-    return f"""You are a regulatory translator. Your job is to take complex legal text 
-and explain it in simple, clear language for a non-lawyer business owner.
+    if mode == "explainer":
+        return f"""You are a regulatory educator. Today is {today}.
+Explain this regulation in plain English for a non-lawyer business owner
+at a {industry} company based in {country}.
+
+REGULATION TEXT:
+{regulation_text}
+
+Write 3 sentences:
+1. What this regulation is and what it covers (broad overview)
+2. Why it matters for a {industry} business in {country}
+3. The single most important thing to do to stay compliant
+
+Use simple words. No jargon. Write as if explaining to a smart friend.
+"""
+
+    # mode == "change" (default)
+    return f"""You are a regulatory translator. Today is {today}.
+Your job is to explain a SPECIFIC REGULATORY FACT OR CHANGE in plain language.
 
 CONTEXT: This is for a {industry} company based in {country}.
 
-LEGAL TEXT:
+REGULATORY FACT:
 {regulation_text}
 
-Explain this in 3 sentences maximum:
-1. What this regulation says (in plain English)
-2. What it means specifically for a {industry} business
-3. What action (if any) is needed
+Explain this specific fact/change in 3 sentences:
+1. What SPECIFICALLY changed or what this rule requires (be concrete, not generic)
+2. What it means specifically for a {industry} business in {country} RIGHT NOW
+3. What ONE concrete action the company should take
 
-Use simple words. No legal jargon. Write as if explaining to a smart friend who isn't a lawyer.
+Rules:
+- Be specific to THIS fact, not regulations in general
+- Never say "The GDPR is a law that..." — assume they know what GDPR is
+- Focus on the CHANGE or SPECIFIC REQUIREMENT, not background info
+- Use simple words, no legal jargon
 """

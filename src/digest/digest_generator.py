@@ -25,27 +25,53 @@ def generate_digest(chunks: List[dict], company_profile: dict, client: ApifyClie
     if not digest_text:
         print("LLM returned empty digest, using fallback")
         return _fallback_digest(chunks, company_profile)
+    
+    # Post-process: usuń przeszłe deadliny z sekcji UPCOMING DEADLINES
+    if digest_text and "UPCOMING DEADLINES" in digest_text:
+        from datetime import datetime
+        import re
+        today = datetime.now()
+        lines = digest_text.split('\n')
+        filtered_lines = []
+        for line in lines:
+            # Znajdź rok w linii
+            year_match = re.search(r'\b(20\d{2})\b', line)
+            if year_match:
+                year = int(year_match.group(1))
+                if year < today.year:
+                    continue  # Pomiń linię z przeszłym rokiem
+                elif year == today.year:
+                    month_match = re.search(r'\b(\d{1,2})\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)', line, re.IGNORECASE)
+                    # uproszczenie — jeśli ten rok to przepuść
+                    pass
+            filtered_lines.append(line)
+        digest_text = '\n'.join(filtered_lines)
 
-    # Generate plain language summaries for top relevant chunks
+    # Generate plain language summary from the digest itself — not raw facts
     plain_summaries = []
-    for chunk in chunks[:5]:
-        # Dla faktów używamy "claim", dla chunków "content"
-        text_to_summarize = chunk.get("claim") or chunk.get("content", "")
-        title = chunk.get("title") or chunk.get("regulation", "Unknown")
-        url = chunk.get("source_url") or chunk.get("url", "")
-        
+
+    if digest_text:
+        # Extract "What Changed" section from digest
+        what_changed_section = digest_text
+        if "## WEEKLY DIGEST" in digest_text:
+            start = digest_text.find("## WEEKLY DIGEST")
+            end = digest_text.find("## STRATEGIC INSIGHTS")
+            if end > start:
+                what_changed_section = digest_text[start:end]
+
         plain_prompt = get_plain_language_prompt(
-            text_to_summarize[:1000],
-            company_profile
+            what_changed_section[:2000],
+            company_profile,
+            mode="change"
         )
-        summary = _call_llm(plain_prompt, client, max_tokens=300)
+        summary = _call_llm(plain_prompt, client, max_tokens=600)
         if summary:
             plain_summaries.append({
-                "title": title,
-                "url": url,
-                "source": chunk.get("source", chunk.get("regulation", "")),
+                "title": "This Week's Key Changes",
+                "url": "",
+                "source": "Vigil Analysis",
                 "plain_summary": summary,
-                "relevance_score": chunk.get("relevance_score", 0)
+                "relevance_score": 1.0
             })
 
     print("Digest generated successfully")
@@ -88,21 +114,29 @@ def _call_llm(prompt: str, client: ApifyClient, max_tokens: int = 1000) -> str |
 
 
 def _build_context(chunks: List[dict]) -> str:
-    """
-    Builds a context string from chunks for the LLM.
-    Each chunk is separated by a delimiter with metadata.
-    """
-
     context_parts = []
 
     for i, chunk in enumerate(chunks):
-        title = chunk.get("title", "Unknown Document")
-        url = chunk.get("url", "")
-        source = chunk.get("source", "")
-        content = chunk.get("content", "")[:800]  # limit per chunk
+        # Obsługa obu formatów — fakty i chunki
+        if chunk.get("claim"):
+            # To jest fakt z fact_extractor
+            content = f"{chunk.get('claim', '')}"
+            if chunk.get("action_required"):
+                content += f"\nAction required: {chunk.get('action_required')}"
+            if chunk.get("deadline"):
+                content += f"\nDeadline: {chunk.get('deadline')}"
+            title = f"{chunk.get('regulation', 'Unknown')} — {chunk.get('article', '')}"
+            url = chunk.get("source_url", "")
+            source = chunk.get("regulation", "")
+        else:
+            # Stary format chunk
+            content = chunk.get("content", "")[:800]
+            title = chunk.get("title", "Unknown Document")
+            url = chunk.get("url", "")
+            source = chunk.get("source", "")
 
         context_parts.append(
-            f"--- Document {i+1}: {title} ---\n"
+            f"--- Fact {i+1}: {title} ---\n"
             f"Source: {source} | URL: {url}\n"
             f"{content}\n"
         )

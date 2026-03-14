@@ -29,7 +29,8 @@ async def scrape_national(client: ApifyClient, company_profile: dict, test_mode:
             "outputFormats": ["markdown"],
             "removeCookieWarnings": True,
             "blockAds": True,
-        }
+        },
+        memory_mbytes=2048
     )
 
     documents = []

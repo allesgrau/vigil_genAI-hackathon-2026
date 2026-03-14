@@ -5,6 +5,7 @@ from typing import List
 from datetime import datetime, timedelta
 from apify_client import ApifyClient
 from rag.prompt_templates import get_alert_prompt
+from datetime import datetime
 
 
 def generate_alerts(chunks: List[dict], company_profile: dict) -> List[dict]:
@@ -51,8 +52,8 @@ def _detect_keyword_alerts(chunks: List[dict], company_profile: dict) -> List[di
 
     # Keywords suggesting dates in the next 90 days
     date_keywords = _get_upcoming_date_keywords()
-
     alerts = []
+    today = datetime.now()
 
     for chunk in chunks:
         content = chunk.get("content", "").lower()
@@ -68,10 +69,29 @@ def _detect_keyword_alerts(chunks: List[dict], company_profile: dict) -> List[di
 
         if matched_keywords or date_matched:
             severity = _determine_severity(matched_keywords, content)
+            deadline = _extract_deadline(content) or "Check source"
+
+            # ← NOWE: pomiń jeśli deadline jest w przeszłości
+            if deadline and deadline != "Check source":
+                try:
+                    import re
+                    year_match = re.search(r'\b(20\d{2})\b', deadline)
+                    if year_match:
+                        year = int(year_match.group(1))
+                        if year < today.year:
+                            continue
+                        elif year == today.year:
+                            month_match = re.search(r'\b(\d{1,2})[/-](\d{1,2})[/-]', deadline)
+                            if month_match:
+                                month = int(month_match.group(1))
+                                if month < today.month:
+                                    continue
+                except Exception:
+                    pass
 
             alerts.append({
                 "title": title,
-                "deadline": _extract_deadline(content) or "Check source",
+                "deadline": deadline,
                 "action_required": _extract_action(content, chunk),
                 "severity": severity,
                 "source_url": url,

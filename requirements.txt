@@ -1,5 +1,5 @@
 # Apify
-apify-client==1.8.1
+apify-client==2.0.0
 apify==3.0.0
 
 # LangChain

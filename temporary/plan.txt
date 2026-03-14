@@ -10,3 +10,5 @@
 3. ładniejszy frontend (ładniejsza strona główna i wgl profesjonalniej)
 4. obsługa wielu języków obcych
 5. szybsze działanie
+
+publikacja Actor

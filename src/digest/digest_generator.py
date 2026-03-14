@@ -29,16 +29,21 @@ def generate_digest(chunks: List[dict], company_profile: dict, client: ApifyClie
     # Generate plain language summaries for top relevant chunks
     plain_summaries = []
     for chunk in chunks[:5]:
+        # Dla faktów używamy "claim", dla chunków "content"
+        text_to_summarize = chunk.get("claim") or chunk.get("content", "")
+        title = chunk.get("title") or chunk.get("regulation", "Unknown")
+        url = chunk.get("source_url") or chunk.get("url", "")
+        
         plain_prompt = get_plain_language_prompt(
-            chunk.get("content", "")[:1000],
+            text_to_summarize[:1000],
             company_profile
         )
         summary = _call_llm(plain_prompt, client, max_tokens=300)
         if summary:
             plain_summaries.append({
-                "title": chunk.get("title", "Unknown"),
-                "url": chunk.get("url", ""),
-                "source": chunk.get("source", ""),
+                "title": title,
+                "url": url,
+                "source": chunk.get("source", chunk.get("regulation", "")),
                 "plain_summary": summary,
                 "relevance_score": chunk.get("relevance_score", 0)
             })

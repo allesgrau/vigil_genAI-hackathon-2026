@@ -39,6 +39,32 @@ def embed_chunks(chunks: List[dict]) -> List[dict]:
     return embedded
 
 
+def embed_facts(facts: List[dict]) -> List[dict]:
+    """
+    Generuje embeddingi dla każdego faktu.
+    Embeddujemy "claim" + "regulation" + "keywords" razem.
+    """
+
+    print(f"🧠 Embedding {len(facts)} facts...")
+
+    client = _get_client()
+    embedded = []
+
+    for i, fact in enumerate(facts):
+        # Buduj tekst do embeddowania — łączymy najważniejsze pola
+        text = f"{fact.get('claim', '')} | {fact.get('regulation', '')} | {' '.join(fact.get('keywords', []))}"
+
+        embedding = _get_embedding(client, text)
+        fact["embedding"] = embedding
+        embedded.append(fact)
+
+        if (i + 1) % 10 == 0:
+            print(f"  → Embedded {i + 1}/{len(facts)} facts")
+
+    print(f"✅ Embedded {len(embedded)} facts")
+    return embedded
+
+
 def _get_embedding(client: OpenAI, text: str) -> List[float]:
     """
     Pobiera embedding przez OpenRouter.

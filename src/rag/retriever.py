@@ -2,11 +2,12 @@ import os
 import requests
 from typing import List
 from rag.vector_store import VectorStore
+from openai import OpenAI
 
 
 def retrieve(chunks: List[dict], company_profile: dict, top_k: int = 10) -> List[dict]:
     """
-    Main retrieval function — builds vector store, generates query embedding,
+    Main retrieval function – builds vector store, generates query embedding,
     and returns the most relevant chunks.
     """
 
@@ -61,8 +62,7 @@ def _build_query(company_profile: dict) -> str:
 
 
 def _get_query_embedding(query: str) -> List[float] | None:
-    from openai import OpenAI
-
+    
     try:
         client = OpenAI(
             base_url=os.getenv("OPENROUTER_ACTOR_URL", "https://openrouter.apify.actor/api/v1"),

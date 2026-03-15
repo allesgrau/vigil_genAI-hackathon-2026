@@ -3,6 +3,8 @@
 3. demo video
 4. ponowny "apify push" i publikacja na "https://console.apify.com/actors/eNNoBc9FzVUizvtOb"
 5. wystawienie aplikacji na publiczną domenę
+czy napewno jest wszystko w okienku czasowym 1 miesiąca?
+usunąć gówna z repo (np. storage)
 
 1. robimy README + onepager
 

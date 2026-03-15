@@ -29,13 +29,13 @@ RECENT REGULATORY DOCUMENTS:
 {context}
 
 YOUR TASK:
-Generate a weekly regulatory digest. Structure your response as follows:
+Generate a monthly regulatory digest. Structure your response as follows:
 
-## URGENT — Action Required This Week
+## URGENT – Action required this month
 List regulations with imminent deadlines or immediate action required.
-If none, write "Nothing urgent this week."
+If none, write "Nothing urgent this month."
 
-## WEEKLY DIGEST — What Changed
+## MONTHLY DIGEST – what changed?
 ONLY include changes from the last 30 days (after {one_month_ago}).
 For each relevant recent change:
 - **What changed**: Plain language summary (max 2 sentences)
@@ -54,7 +54,7 @@ Only list deadlines after {today_str} and within the next 90 days.
 IMPORTANT RULES:
 - Write in plain, jargon-free English
 - Be specific to this company's profile
-- Never fabricate deadlines — only use what's in the documents
+- Never fabricate deadlines – only use what's in the documents
 - Keep each section concise and scannable
 """
 
@@ -81,7 +81,7 @@ REGULATORY DOCUMENTS:
 {context}
 
 YOUR TASK:
-Identify regulations that require action within the next 7 days from today ({today}).
+Identify regulations that require action within the next 30 days from today ({today}).
 For each urgent item output ONLY a JSON array like this:
 
 [
@@ -123,7 +123,6 @@ Write 3 sentences:
 Use simple words. No jargon. Write as if explaining to a smart friend.
 """
 
-    # mode == "change" (default)
     return f"""You are a regulatory translator. Today is {today_str}.
 Your job is to explain a SPECIFIC RECENT REGULATORY CHANGE in plain language.
 Only describe changes that occurred after {one_month_ago}.

@@ -15,7 +15,7 @@ def _get_client() -> OpenAI:
 
 def embed_chunks(chunks: List[dict]) -> List[dict]:
     """
-    Generuje embeddingi dla każdego chunka używając OpenRouter przez Apify.
+    Generate embeddings for each chunk using OpenRouter via Apify.
     """
 
     print(f"🧠 Embedding {len(chunks)} chunks...")
@@ -41,8 +41,8 @@ def embed_chunks(chunks: List[dict]) -> List[dict]:
 
 def embed_facts(facts: List[dict]) -> List[dict]:
     """
-    Generuje embeddingi dla każdego faktu.
-    Embeddujemy "claim" + "regulation" + "keywords" razem.
+    Generate embeddings for each fact.
+    We embed "claim" + "regulation" + "keywords" together.
     """
 
     print(f"🧠 Embedding {len(facts)} facts...")
@@ -51,7 +51,6 @@ def embed_facts(facts: List[dict]) -> List[dict]:
     embedded = []
 
     for i, fact in enumerate(facts):
-        # Buduj tekst do embeddowania — łączymy najważniejsze pola
         text = f"{fact.get('claim', '')} | {fact.get('regulation', '')} | {' '.join(fact.get('keywords', []))}"
 
         embedding = _get_embedding(client, text)
@@ -67,8 +66,8 @@ def embed_facts(facts: List[dict]) -> List[dict]:
 
 def _get_embedding(client: OpenAI, text: str) -> List[float]:
     """
-    Pobiera embedding przez OpenRouter.
-    Fallback na simple_embedding jeśli API nie obsługuje embeddingów.
+    Retrieves embedding via OpenRouter.
+    Fallback to simple_embedding if API doesn't support embeddings.
     """
 
     try:
@@ -85,7 +84,7 @@ def _get_embedding(client: OpenAI, text: str) -> List[float]:
 
 def _simple_embedding(text: str) -> List[float]:
     """
-    Lokalny fallback — deterministyczny pseudo-embedding.
+    Local fallback — deterministic pseudo-embedding.
     """
 
     import hashlib

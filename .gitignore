@@ -208,8 +208,6 @@ __marimo__/
 
 # Vigil specific
 cache/
-
-# Streamlit
 .streamlit/secrets.toml
 src/storage/
 storage/

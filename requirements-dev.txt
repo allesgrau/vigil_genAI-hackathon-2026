@@ -1,7 +1,7 @@
 -r requirements.txt
 
-# Streamlit (frontend — later)
+# Streamlit
 streamlit==1.39.0
 
-# Development / testing
+# Testing
 pytest>=9.0.0

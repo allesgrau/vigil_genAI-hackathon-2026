@@ -15,6 +15,10 @@ def _get_client() -> OpenAI:
 
 
 def extract_facts(chunks: List[dict], company_profile: dict) -> List[dict]:
+    """
+    Extracts discrete, verifiable facts from the given chunks of regulatory documents using an LLM.
+    These facts are then embedded and stored in the knowledge base for later retrieval.
+    """
 
     if not chunks:
         return []
@@ -23,7 +27,7 @@ def extract_facts(chunks: List[dict], company_profile: dict) -> List[dict]:
     all_facts = []
     areas = company_profile.get("areas_of_concern", [])
 
-    # W test_mode przetwarzaj tylko pierwsze 20 chunków!
+    # In the test_mode, limit the number of chunks to speed up development and save credits
     test_mode = company_profile.get("test_mode", False)
     if test_mode:
         chunks = chunks[:20]
@@ -31,7 +35,7 @@ def extract_facts(chunks: List[dict], company_profile: dict) -> List[dict]:
 
     print(f"🔬 Extracting facts from {len(chunks)} chunks...")
 
-    # Przetwarzaj po 5 chunków naraz żeby oszczędzać kredyty
+    # Process chunks in batches to avoid hitting token limits and to improve efficiency
     batch_size = 5
     for i in range(0, len(chunks), batch_size):
         batch = chunks[i:i + batch_size]
@@ -51,7 +55,7 @@ def extract_facts(chunks: List[dict], company_profile: dict) -> List[dict]:
 
 def _extract_facts_from_batch(client: OpenAI, batch_text: str, areas: List[str], batch_chunks: List[dict] = None) -> List[dict]:
     """
-    Ekstrahuje fakty z batcha chunków przez LLM.
+    Extracts facts from a batch of chunks using the LLM.
     """
 
     areas_str = ", ".join(areas)
@@ -100,11 +104,10 @@ Return ONLY the JSON array. Example format:
 
         raw = response.choices[0].message.content
 
-        # Parsuj JSON
+        # Parse the JSON response
         try:
             facts = json.loads(raw)
         except json.JSONDecodeError:
-            # Wyciągnij JSON z tekstu
             start = raw.find("[")
             end = raw.rfind("]") + 1
             if start != -1 and end > start:
@@ -112,13 +115,13 @@ Return ONLY the JSON array. Example format:
             else:
                 return []
 
-        # Dodaj fact_id do każdego faktu
+        # Add fact_id and embedding placeholder, and ensure source_url is set
         result = []
         for i, fact in enumerate(facts):
             if isinstance(fact, dict) and fact.get("claim"):
                 fact["fact_id"] = f"fact_{hash(fact['claim'])}"
                 fact["embedding"] = None
-                # Jeśli LLM nie podał source_url, weź z pierwszego chunka w batchu
+                # If the LLM didn't provide a source_url, try to infer it from the batch chunks
                 if not fact.get("source_url") and batch_chunks:
                     fact["source_url"] = batch_chunks[0].get("url", "")
                     fact["title"] = batch_chunks[0].get("title", "Unknown")

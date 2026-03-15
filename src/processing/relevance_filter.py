@@ -88,20 +88,19 @@ def _build_keywords(industry: str, country: str, areas: List[str]) -> List[str]:
 
 def _score_chunk(chunk: dict, keywords: List[str], areas: List[str]) -> float:
     """
-    Scoruje chunk LUB fakt na podstawie keywordów.
-    Obsługuje oba formaty — stare chunki i nowe fakty.
+    Score chunk OR fact based on keywords.
+    Handles both old chunk format and new fact format.
     """
 
-    # Pobierz content — obsługa obu formatów
+    # Download content — handling both old chunk format and new fact format
     if chunk.get("claim"):
-        # To jest fakt
+        # It's a fact chunk
         content = f"{chunk.get('claim', '')} {chunk.get('action_required', '')} {' '.join(chunk.get('keywords', []))}".lower()
         title = f"{chunk.get('regulation', '')} {chunk.get('article', '')}".lower()
-        # Bonus za severity
         severity_bonus = {"critical": 5.0, "high": 3.0, "medium": 1.5, "low": 0.5}
         base_score = severity_bonus.get(chunk.get("severity", "low"), 0.5)
     else:
-        # To jest zwykły chunk
+        # It's an old chunk format
         content = chunk.get("content", "").lower()
         title = chunk.get("title", "").lower()
         base_score = 0.0

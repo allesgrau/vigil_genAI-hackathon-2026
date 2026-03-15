@@ -46,7 +46,7 @@ async def main():
         raw_documents = eurlex_docs + gdpr_docs + national_docs
         print(f"Total documents scraped: {len(raw_documents)}")
 
-        # Step 2: Chunking (krok pośredni dla fact extraction)
+        # Step 2: Chunking (intermediate step to break down large documents into smaller pieces)
         print("Chunking documents...")
         chunks = chunk_documents(raw_documents)
 

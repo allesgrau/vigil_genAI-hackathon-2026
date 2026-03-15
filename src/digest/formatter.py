@@ -66,7 +66,7 @@ def _format_alerts(alerts: List[dict]) -> str:
     """
 
     if not alerts:
-        return "✅ No urgent alerts this week."
+        return "✅ No urgent alerts this month."
 
     lines = []
 
@@ -143,7 +143,7 @@ def _build_markdown_report(
     except Exception:
         date_str = generated_at
 
-    report = f"""# 🛡️ Vigil — Weekly Regulatory Digest
+    report = f"""# 🛡️ Vigil – Monthly regulatory digest
 
 **Company:** {company}
 **Industry:** {industry} | **Country:** {country}
@@ -159,7 +159,7 @@ def _build_markdown_report(
 
 ---
 
-## 📋 WEEKLY DIGEST
+## 📋 MONTHLY DIGEST
 
 {digest_text}
 

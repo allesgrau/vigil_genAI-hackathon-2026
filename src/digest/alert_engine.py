@@ -11,7 +11,7 @@ from datetime import datetime
 def generate_alerts(chunks: List[dict], company_profile: dict) -> List[dict]:
     """
     Analyzes chunks and generates urgent alerts —
-    when the deadline is before the next weekly digest.
+    when the deadline is before the next monthly digest.
     """
 
     if not chunks:
@@ -71,7 +71,6 @@ def _detect_keyword_alerts(chunks: List[dict], company_profile: dict) -> List[di
             severity = _determine_severity(matched_keywords, content)
             deadline = _extract_deadline(content) or "Check source"
 
-            # ← NOWE: pomiń jeśli deadline jest w przeszłości
             if deadline and deadline != "Check source":
                 try:
                     import re
@@ -105,8 +104,8 @@ def _detect_keyword_alerts(chunks: List[dict], company_profile: dict) -> List[di
 
 def _detect_llm_alerts(chunks: List[dict], company_profile: dict) -> List[dict]:
     """
-    LLM-based detekcja alertów — dokładniejsza ale wolniejsza.
-    Używa top 5 chunków żeby oszczędzać kredyty.
+    LLM-based alert detection — more accurate but slower.
+    Uses top 5 chunks to save credits.
     """
 
     try:
@@ -223,7 +222,6 @@ def _extract_deadline(content: str) -> str | None:
 
     import re
 
-    # Wzorce dat: 2025-01-01, 01/01/2025, January 1, 2025
     patterns = [
         r"\d{4}-\d{2}-\d{2}",
         r"\d{2}/\d{2}/\d{4}",

@@ -5,10 +5,13 @@ from typing import List
 from apify_client import ApifyClient
 from rag.prompt_templates import get_digest_prompt, get_plain_language_prompt
 
+from datetime import datetime
+import re
+
 
 def generate_digest(chunks: List[dict], company_profile: dict, client: ApifyClient) -> dict:
     """
-    Generates a weekly regulatory digest using LLM via OpenRouter.
+    Generates a monthly regulatory digest using LLM via OpenRouter.
     """
 
     if not chunks:
@@ -26,23 +29,19 @@ def generate_digest(chunks: List[dict], company_profile: dict, client: ApifyClie
         print("LLM returned empty digest, using fallback")
         return _fallback_digest(chunks, company_profile)
     
-    # Post-process: usuń przeszłe deadliny z sekcji UPCOMING DEADLINES
+    # Post-process: delete deadlines that are already past (if any)
     if digest_text and "UPCOMING DEADLINES" in digest_text:
-        from datetime import datetime
-        import re
         today = datetime.now()
         lines = digest_text.split('\n')
         filtered_lines = []
         for line in lines:
-            # Znajdź rok w linii
             year_match = re.search(r'\b(20\d{2})\b', line)
             if year_match:
                 year = int(year_match.group(1))
                 if year < today.year:
-                    continue  # Pomiń linię z przeszłym rokiem
+                    continue
                 elif year == today.year:
                     month_match = re.search(r'\b(\d{1,2})\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)', line, re.IGNORECASE)
-                    # uproszczenie — jeśli ten rok to przepuść
                     pass
             filtered_lines.append(line)
         digest_text = '\n'.join(filtered_lines)
@@ -51,10 +50,10 @@ def generate_digest(chunks: List[dict], company_profile: dict, client: ApifyClie
     plain_summaries = []
 
     if digest_text:
-        # Extract "What Changed" section from digest
+        # Extract "What changed" section from digest
         what_changed_section = digest_text
-        if "## WEEKLY DIGEST" in digest_text:
-            start = digest_text.find("## WEEKLY DIGEST")
+        if "## MONTHLY DIGEST" in digest_text:
+            start = digest_text.find("## MONTHLY DIGEST")
             end = digest_text.find("## STRATEGIC INSIGHTS")
             if end > start:
                 what_changed_section = digest_text[start:end]
@@ -67,7 +66,7 @@ def generate_digest(chunks: List[dict], company_profile: dict, client: ApifyClie
         summary = _call_llm(plain_prompt, client, max_tokens=600)
         if summary:
             plain_summaries.append({
-                "title": "This Week's Key Changes",
+                "title": "This month's key changes",
                 "url": "",
                 "source": "Vigil Analysis",
                 "plain_summary": summary,
@@ -117,9 +116,9 @@ def _build_context(chunks: List[dict]) -> str:
     context_parts = []
 
     for i, chunk in enumerate(chunks):
-        # Obsługa obu formatów — fakty i chunki
+        # Handling both new and old chunk formats for backward compatibility
         if chunk.get("claim"):
-            # To jest fakt z fact_extractor
+            # It's a fact
             content = f"{chunk.get('claim', '')}"
             if chunk.get("action_required"):
                 content += f"\nAction required: {chunk.get('action_required')}"
@@ -129,7 +128,7 @@ def _build_context(chunks: List[dict]) -> str:
             url = chunk.get("source_url", "")
             source = chunk.get("regulation", "")
         else:
-            # Stary format chunk
+            # It's a raw chunk without structured fact fields
             content = chunk.get("content", "")[:800]
             title = chunk.get("title", "Unknown Document")
             url = chunk.get("url", "")
@@ -151,11 +150,11 @@ def _empty_digest(company_profile: dict) -> dict:
 
     return {
         "digest_text": (
-            f"## Weekly Digest for {company_profile.get('company_name', 'Your Company')}\n\n"
-            "No regulatory updates found for your profile this week. "
+            f"## Monthly digest for {company_profile.get('company_name', 'Your Company')}\n\n"
+            "No regulatory updates found for your profile this month. "
             "This may indicate no changes in your monitored areas, "
             "or that the sources were temporarily unavailable.\n\n"
-            "**Recommendation:** Check back next week or broaden your areas of concern."
+            "**Recommendation:** Check back next month or broaden your areas of concern."
         ),
         "plain_summaries": [],
         "sources_used": 0,
@@ -180,9 +179,9 @@ def _fallback_digest(chunks: List[dict], company_profile: dict) -> dict:
         )
 
     digest_text = (
-        f"## Weekly Digest for {company_profile.get('company_name', 'Your Company')}\n\n"
+        f"## Monthly digest for {company_profile.get('company_name', 'Your Company')}\n\n"
         f"**Note:** AI summary unavailable. Showing raw regulatory updates.\n\n"
-        f"### Recent Updates Found:\n\n" +
+        f"### Recent updates found:\n\n" +
         "\n".join(summaries)
     )
 

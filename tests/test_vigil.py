@@ -1,7 +1,6 @@
-# tests/test_vigil.py
 """
-Vigil Integration Tests
-Real API calls, minimal data — same philosophy as test_mode.
+Vigil integration tests
+Real API calls, minimal data – same philosophy as test_mode.
 Run: pytest tests/test_vigil.py -v
 """
 
@@ -24,7 +23,8 @@ from digest.alert_engine import generate_alerts
 from digest.formatter import format_output
 
 
-# ─── FIXTURES ─────────────────────────────────────────────────────────────────
+# ----- FIXTURES -----
+
 
 @pytest.fixture(scope="session")
 def apify_client():
@@ -65,7 +65,8 @@ def sample_documents(apify_client):
              "source": "edpb"} for i in items]
 
 
-# ─── CHUNKER ──────────────────────────────────────────────────────────────────
+# ----- CHUNKER -----
+
 
 class TestChunker:
 
@@ -86,7 +87,6 @@ class TestChunker:
 
     def test_chunk_size_respected(self, sample_documents):
         chunks = chunk_documents(sample_documents, chunk_size=500)
-        # Chunks can slightly exceed due to overlap — allow 2x tolerance
         for chunk in chunks:
             assert len(chunk["content"]) < 1200, "Chunk way too large"
 
@@ -100,12 +100,13 @@ class TestChunker:
         assert chunks == []
 
 
-# ─── FACT EXTRACTOR ───────────────────────────────────────────────────────────
+# ----- FACT EXTRACTOR -----
+
 
 class TestFactExtractor:
 
     def test_extracts_facts_from_real_chunks(self, sample_documents, company_profile):
-        chunks = chunk_documents(sample_documents)[:5]  # tylko 5 chunków
+        chunks = chunk_documents(sample_documents)[:5]
         facts = extract_facts(chunks, company_profile)
         assert isinstance(facts, list), "Should return a list"
         assert len(facts) > 0, "Should extract at least 1 fact"
@@ -135,7 +136,8 @@ class TestFactExtractor:
         assert facts == []
 
 
-# ─── EMBEDDER + FILTER ────────────────────────────────────────────────────────
+# ----- EMBEDDER + FILTER -----
+
 
 class TestEmbedderAndFilter:
 
@@ -169,7 +171,8 @@ class TestEmbedderAndFilter:
         assert isinstance(relevant, list)
 
 
-# ─── DIGEST GENERATOR ─────────────────────────────────────────────────────────
+# ----- DIGEST GENERATOR -----
+
 
 class TestDigestGenerator:
 
@@ -202,7 +205,6 @@ class TestDigestGenerator:
         assert digest["sources_used"] == 0
 
     def test_digest_no_past_deadlines(self, sample_documents, company_profile, apify_client):
-        """Deadliny w digestcie nie mogą być przed 2026."""
         from datetime import datetime
         import re
         chunks = chunk_documents(sample_documents)[:5]
@@ -219,7 +221,8 @@ class TestDigestGenerator:
         assert not past_years, f"Found past years in digest: {past_years}"
 
 
-# ─── FORMATTER ────────────────────────────────────────────────────────────────
+# ----- FORMATTER -----
+
 
 class TestFormatter:
 

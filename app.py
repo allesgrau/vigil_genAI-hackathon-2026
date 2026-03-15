@@ -13,6 +13,7 @@ if hasattr(st, 'secrets'):
     for key, value in st.secrets.items():
         if key not in os.environ:
             os.environ[key] = str(value)
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from apify_client import ApifyClient
@@ -29,10 +30,23 @@ from digest.alert_engine import generate_alerts
 from digest.formatter import format_output
 
 st.set_page_config(
-    page_title="Vigil — Regulatory Intelligence",
+    page_title="Vigil – Regulatory Intelligence",
     page_icon="🛡️",
     layout="wide"
 )
+
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import cm
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, HRFlowable
+
+from openai import OpenAI
+from rag.prompt_templates import get_plain_language_prompt
+
+
+# ----- CSS CONFIG -----
+
 
 st.markdown("""
 <style>
@@ -47,12 +61,10 @@ st.markdown("""
         color: #1a1f36;
     }
 
-    /* Hide Streamlit header */
     header[data-testid="stHeader"] {
         display: none !important;
     }
 
-    /* ── TABS ── */
     .stTabs [data-baseweb="tab-list"] {
         background: transparent !important;
         border-bottom: 1px solid #e8edf5 !important;
@@ -82,7 +94,6 @@ st.markdown("""
         -webkit-text-fill-color: inherit !important;
     }
 
-    /* ── SIDEBAR ── */
     section[data-testid="stSidebar"] {
         background: #ffffff !important;
         border-right: 1px solid #e8edf5;
@@ -115,7 +126,6 @@ st.markdown("""
         border-radius: 8px !important;
     }
 
-    /* Sidebar button */
     section[data-testid="stSidebar"] .stButton > button,
     section[data-testid="stSidebar"] .stButton > button *,
     section[data-testid="stSidebar"] .stButton > button p {
@@ -123,7 +133,6 @@ st.markdown("""
         -webkit-text-fill-color: white !important;
     }
 
-    /* Fix multiselect — no gray overflow artifact */
     section[data-testid="stSidebar"] [data-testid="stMultiSelect"],
     [data-testid="stMultiSelect"] {
         overflow: visible !important;
@@ -136,12 +145,10 @@ st.markdown("""
         text-overflow: ellipsis !important;
     }
 
-    /* Hide the gray overflow mask artifact */
     section[data-testid="stSidebar"] [data-testid="stMultiSelect"] > div::after {
         display: none !important;
     }
 
-    /* ── ALL BUTTONS ── */
     .stButton > button,
     [data-testid="stDownloadButton"] button {
         background: linear-gradient(135deg, #2563eb, #6366f1) !important;
@@ -165,7 +172,6 @@ st.markdown("""
         -webkit-text-fill-color: white !important;
     }
 
-    /* ── METRICS — force visibility ── */
     div[data-testid="stMetricValue"],
     div[data-testid="stMetricValue"] * {
         color: #0f172a !important;
@@ -193,7 +199,6 @@ st.markdown("""
         opacity: 1 !important;
     }
 
-    /* ── STATUS WIDGET — blue gradient ── */
     div[data-testid="stStatusWidget"],
     [data-testid="stStatus"],
     div[data-testid="stStatus"] {
@@ -209,7 +214,6 @@ st.markdown("""
         -webkit-text-fill-color: #1e40af !important;
     }
 
-    /* ── EXPANDER ── */
     [data-testid="stExpander"] {
         border: 1px solid #e8edf5 !important;
         border-radius: 10px !important;
@@ -229,7 +233,6 @@ st.markdown("""
         -webkit-text-fill-color: #1a1f36 !important;
     }
 
-    /* ── DROPDOWN POPOVER ── */
     [data-baseweb="popover"],
     [data-baseweb="menu"] {
         background-color: white !important;
@@ -240,12 +243,10 @@ st.markdown("""
         color: #1a1f36 !important;
     }
 
-    /* ── GENERAL ── */
     h1, h2, h3 {
         color: #0f172a !important;
     }
 
-    /* ── ALERT BOXES ── */
     .alert-critical {
         background: #fff5f5;
         border-left: 4px solid #ef4444;
@@ -303,7 +304,6 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
 
-    /* ── HERO ── */
     .hero-section {
         background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 40%, #dbeafe 100%);
         border-radius: 20px;
@@ -407,7 +407,6 @@ st.markdown("""
         border: 1px solid #bfdbfe;
     }
 
-    /* Fix green alert text visibility */
     div[data-testid="stAlert"] p,
     div[data-testid="stAlert"] {
         color: #166534 !important;
@@ -418,7 +417,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ─── HELPERS ───────────────────────────────────────────────────────────────────
+# ----- HELPERS -----
+
 
 CACHE_DIR = "cache"
 
@@ -445,14 +445,11 @@ def _save_cache(company_profile: dict, output: dict):
     with open(path, "w") as f:
         json.dump(output, f)
 
-def _generate_pdf(markdown_text: str, company_name: str) -> bytes:
-    try:
-        from reportlab.lib.pagesizes import A4
-        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-        from reportlab.lib.units import cm
-        from reportlab.lib import colors
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, HRFlowable
 
+def _generate_pdf(markdown_text: str, company_name: str) -> bytes:
+
+    try:
+        
         buffer = BytesIO()
         doc = SimpleDocTemplate(
             buffer, pagesize=A4,
@@ -477,7 +474,7 @@ def _generate_pdf(markdown_text: str, company_name: str) -> bytes:
         meta_style = ParagraphStyle('VMeta', parent=styles['Normal'],
             fontSize=8, textColor=colors.HexColor('#94a3b8'), spaceAfter=12)
 
-        story.append(Paragraph("Vigil — Regulatory Digest", title_style))
+        story.append(Paragraph("Vigil – Regulatory Digest", title_style))
         story.append(Paragraph(
             f"Company: {company_name} · Generated: {datetime.now().strftime('%B %d, %Y')}",
             meta_style))
@@ -508,14 +505,17 @@ def _generate_pdf(markdown_text: str, company_name: str) -> bytes:
         return buffer.getvalue()
 
     except ImportError:
+
         return markdown_text.encode('utf-8')
 
 
 async def run_vigil(company_profile: dict) -> dict:
+
     client = ApifyClient(token=os.getenv("APIFY_TOKEN"))
     test_mode = company_profile.get("test_mode", True)
 
     with st.status("🔍 Vigil is working...", expanded=True) as status:
+
         st.write("📡 Scraping regulatory sources...")
         eurlex_docs = await scrape_eurlex(client, company_profile, test_mode=test_mode)
         gdpr_docs = await scrape_gdpr(client, company_profile, test_mode=test_mode)
@@ -548,12 +548,13 @@ async def run_vigil(company_profile: dict) -> dict:
 
 
 def render_alerts(output: dict):
+
     critical = output.get("critical_alerts", [])
     high = output.get("high_alerts", [])
     medium = output.get("medium_alerts", [])
 
     if not critical and not high and not medium:
-        st.success("✅ No urgent alerts this week — you're compliant!")
+        st.success("✅ No urgent alerts this month – you're compliant!")
         return
 
     for alert in critical:
@@ -588,15 +589,17 @@ def render_alerts(output: dict):
 
 
 def render_plain_summaries(output: dict):
+    
     summaries = output.get("plain_summaries", [])
     if not summaries:
         st.info("No plain language summaries available.")
         return
 
     for i, summary in enumerate(summaries, 1):
+
         source = (summary.get('source') or '').upper()
         title = summary.get('title', f'Update {i}')
-        # Clean duplicate titles like "GDPR — GDPR"
+    
         if title:
             parts = title.split(' — ') if ' — ' in title else [title]
             unique_parts = list(dict.fromkeys(p.strip() for p in parts))
@@ -611,11 +614,8 @@ def render_plain_summaries(output: dict):
 
 
 def _get_regulation_explainer(area: str, company_profile: dict) -> str:
-    """Generuje spersonalizowany opis regulacji przez LLM."""
-    from openai import OpenAI
-    from rag.prompt_templates import get_plain_language_prompt
+    """Generates a personalized regulation explainer using LLM."""
 
-    # Bazowy tekst o regulacji jako kontekst dla LLM
     regulation_context = {
         "GDPR": "General Data Protection Regulation (GDPR) - EU law governing personal data processing. Key rules: legal basis for processing, 72h breach notification, data subject rights, data minimization, fines up to €20M or 4% global turnover.",
         "AI Act": "EU AI Act - world's first comprehensive AI regulation. Risk-based classification: prohibited AI, high-risk AI (conformity assessment required), limited risk, minimal risk. GPAI models have transparency obligations. Phased implementation 2024-2027.",
@@ -679,22 +679,21 @@ def render_regulation_library(areas: list, company_profile: dict):
         "AML":    {"full_name": "Anti-Money Laundering Directive",     "emoji": "🏴‍☠️", "effective": "June 2021 (6th AMLD)", "link": "https://ec.europa.eu/info/law/anti-money-laundering-directive-directive-eu-2018-843_en"},
     }
 
-    st.markdown("### 📚 Regulation Library")
+    st.markdown("### 📚 Regulation library")
     st.caption(f"Personalized for **{company_profile.get('company_name', 'your company')}** · {company_profile.get('industry', '')} · {company_profile.get('country', '')}")
 
     if not areas:
         st.info("Select regulations in the sidebar to see explainers.")
         return
 
-    # Załaduj cache dla tej kombinacji profilu
     library_cache = _load_library_cache(company_profile)
 
     for area in areas:
+
         meta = regulation_meta.get(area)
         if not meta:
             continue
 
-        # Generuj lub pobierz z cache
         if area not in library_cache:
             with st.spinner(f"Generating personalized explainer for {area}..."):
                 library_cache[area] = _get_regulation_explainer(area, company_profile)
@@ -724,24 +723,27 @@ def render_regulation_library(areas: list, company_profile: dict):
         """, unsafe_allow_html=True)
 
 
-# ─── SIDEBAR ───────────────────────────────────────────────────────────────────
+# ----- SIDEBAR -----
+
+
 with st.sidebar:
+
     st.markdown("""
     <div style="padding: 1rem 0 0.5rem 0;">
         <div style="font-size: 1.8rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;">
             🛡️ Vigil
         </div>
         <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 500; margin-top: 0.2rem;">
-            Regulatory Intelligence
+            Regulatory intelligence
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     st.divider()
-    st.markdown("**Company Profile**")
+    st.markdown("**Company profile**")
     st.caption("Personalize your regulatory feed")
 
-    company_name = st.text_input("Company Name", value="TechStartup GmbH")
+    company_name = st.text_input("Company name", value="TechStartup GmbH")
     industry = st.selectbox("Industry", [
         "fintech", "healthcare", "ecommerce", "saas", "manufacturing"
     ])
@@ -750,17 +752,17 @@ with st.sidebar:
         "DE", "PL", "FR", "CH", "NL", "IT", "ES", "AT", "BE", "SE",
         "IE", "LU", "DK", "FI", "PT", "CZ", "HU", "RO"
     ])
-    size = st.selectbox("Company Size", ["startup", "sme", "enterprise"])
+    size = st.selectbox("Company size", ["startup", "sme", "enterprise"])
     areas = st.multiselect(
-        "Monitor Regulations",
+        "Monitor regulations",
         ["GDPR", "AI Act", "PSD2", "AML", "NIS2", "DORA"],
         default=["GDPR", "AI Act"]
     )
-    test_mode = st.toggle("⚡ Fast Mode", value=True,
+    test_mode = st.toggle("⚡ Fast mode", value=True,
                           help="Uses cached results for instant demo")
 
     st.divider()
-    run_button = st.button("🚀 Generate Digest", type="primary",
+    run_button = st.button("🚀 Generate digest", type="primary",
                            use_container_width=True)
 
     st.markdown("""
@@ -778,7 +780,9 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 
-# ─── TABS ──────────────────────────────────────────────────────────────────────
+# ----- TABS -----
+
+
 company_profile = {
                 "company_name": company_name,
                 "industry": industry,
@@ -788,7 +792,7 @@ company_profile = {
                 "test_mode": test_mode
             }
 
-tab1, tab2 = st.tabs(["📋 Digest", "📚 Regulation Library"])
+tab1, tab2 = st.tabs(["📋 Digest", "📚 Regulation library"])
 
 with tab2:
     render_regulation_library(areas, company_profile)
@@ -800,7 +804,7 @@ with tab1:
         else:
             cached = _load_cache(company_profile)
             if cached and test_mode:
-                st.info("⚡ Loaded from cache — instant results!")
+                st.info("⚡ Loaded from cache – instant results!")
                 output = cached
             else:
                 output = asyncio.run(run_vigil(company_profile))
@@ -808,25 +812,25 @@ with tab1:
 
             col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.metric("📚 Sources Analyzed", output.get("sources_analyzed", 0))
+                st.metric("📚 Sources analyzed", output.get("sources_analyzed", 0))
             with col2:
-                st.metric("🚨 Total Alerts", output.get("alerts_count", 0))
+                st.metric("🚨 Total alerts", output.get("alerts_count", 0))
             with col3:
                 st.metric("🔴 Critical", len(output.get("critical_alerts", [])))
             with col4:
-                st.metric("🟠 High Priority", len(output.get("high_alerts", [])))
+                st.metric("🟠 High priority", len(output.get("high_alerts", [])))
 
             st.divider()
             col_left, col_right = st.columns([3, 2])
 
             with col_left:
                 st.markdown('<div class="digest-container">', unsafe_allow_html=True)
-                st.subheader("📋 Weekly Digest")
+                st.subheader("📋 Monthly digest")
                 st.markdown(output.get("digest_markdown", ""))
                 st.markdown('</div>', unsafe_allow_html=True)
 
                 st.markdown("<br>", unsafe_allow_html=True)
-                st.subheader("🗣️ What Changed — Plain Language")
+                st.subheader("🗣️ What changed – plain language")
                 st.caption("Key regulatory updates explained for your business, no jargon.")
                 render_plain_summaries(output)
 
@@ -836,7 +840,7 @@ with tab1:
                     render_alerts(output)
 
                     st.divider()
-                    st.subheader("📥 Download Report")
+                    st.subheader("📥 Download report")
                     md_data = output.get("full_report_markdown", "")
                     pdf_data = _generate_pdf(md_data, company_name)
 
@@ -873,11 +877,11 @@ with tab1:
                 <div class="hero-subtitle">
                     SMEs spend thousands on lawyers just to stay compliant.
                     Vigil monitors EU regulations in real time and delivers
-                    personalized, actionable compliance alerts —
+                    personalized, actionable compliance alerts –
                     <strong>before the deadline hits.</strong>
                 </div>
                 <div>
-                    <span class="feature-pill">📋 Weekly digests</span>
+                    <span class="feature-pill">📋 Monthly digests</span>
                     <span class="feature-pill">🚨 Deadline alerts</span>
                     <span class="feature-pill">🗣️ Plain language</span>
                     <span class="feature-pill">💡 Strategic insights</span>
@@ -895,7 +899,7 @@ with tab1:
                 <div style="font-size:2rem;margin-bottom:0.8rem;">⚡</div>
                 <div style="font-weight:700;color:#0f172a;margin-bottom:0.5rem;">Real-time monitoring</div>
                 <div style="color:#64748b;font-size:0.88rem;line-height:1.6;">
-                    Vigil scrapes EUR-Lex, EDPB, and national regulators — so you never miss a change.
+                    Vigil scrapes EUR-Lex, EDPB, and national regulators – so you never miss a change.
                 </div>
             </div>""", unsafe_allow_html=True)
         with col2:

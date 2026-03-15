@@ -2,12 +2,8 @@
 apify-client==2.0.0
 apify==3.0.0
 
-# OpenAI SDK (używany do OpenRouter)
+# OpenAI SDK
 openai>=1.0.0
-
-# LangChain
-langchain==0.3.0
-langchain-community==0.3.0
 
 # HTTP & scraping
 requests==2.32.3

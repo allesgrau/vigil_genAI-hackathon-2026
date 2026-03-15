@@ -48,38 +48,29 @@ def _build_urls(areas: list[str]) -> list[str]:
     area_to_urls = {
         "GDPR": [
             "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679",
-            "https://eur-lex.europa.eu/search.html?query=GDPR&DB_TYPE_OF_ACT=regulation",
-            "https://edpb.europa.eu/news/news_en",
-            "https://gdpr.eu/category/news/"
+            "https://edpb.europa.eu/news/news_en"
         ],
         "AI Act": [
             "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R1689",
-            "https://eur-lex.europa.eu/search.html?query=artificial+intelligence+act",
-            "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
-            "https://artificialintelligenceact.eu/news/",
+            "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai"
         ],
         "PSD2": [
             "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32015L2366",
             "https://www.eba.europa.eu/regulation-and-policy/payment-services-and-electronic-money"
         ],
         "AML": [
-            "https://eur-lex.europa.eu/search.html?query=anti+money+laundering",
-            "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/fatf-recommendations.html",
             "https://www.amla.europa.eu/news"
         ],
         "NIS2": [
-            "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022L2555",
-            "https://www.enisa.europa.eu/topics/cybersecurity-policy/nis-directive-new"
+            "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022L2555"
         ],
         "DORA": [
-            "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022R2554",
-            "https://www.eba.europa.eu/regulation-and-policy/operational-resilience/digital-operational-resilience-act-dora"
+            "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022R2554"
         ],
     }
 
     urls = [
         "https://eur-lex.europa.eu/oj/direct-access.html",
-        "https://gdpr.eu/category/news/",
         "https://ec.europa.eu/commission/presscorner/home/en",
     ]
 

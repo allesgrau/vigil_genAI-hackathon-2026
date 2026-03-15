@@ -54,94 +54,86 @@ def _get_national_urls(country: str, industry: str) -> list[str]:
         "DE": [
             "https://www.gesetze-im-internet.de/aktuell.html",
             "https://www.bundesanzeiger.de/pub/en/start",
-            "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Industriesteuerungen/KRITIS/kritis_node.html",
+            "https://www.bsi.bund.de/SiteGlobals/Forms/Suche/Expertensuche_Pressemitteilungen_und_KM_Formular.html?nn=133020&cl2Categories_DocType=news+pressrelease&sortOrder=dateOfIssue_dt+desc",
         ],
         "PL": [
-            "https://dziennikustaw.gov.pl/najnowsze",
-            "https://legislacja.gov.pl/projekty/lista",
+            "https://dziennikustaw.gov.pl/DU",
+            "https://legislacja.gov.pl/",
             "https://uodo.gov.pl/pl/138"
         ],
         "FR": [
-            "https://www.legifrance.gouv.fr/liste/jo",
-            "https://www.service-public.fr/actualites",
-            "https://www.cnil.fr/fr/news",
+            "https://www.legifrance.gouv.fr/",
+            "https://www.service-public.gouv.fr/",
+            "https://www.cnil.fr/fr/actualite",
             "https://www.amf-france.org/fr/actualites-publications/actualites"
         ],
         "CH": [
             "https://www.admin.ch/gov/en/start/documentation/media-releases.html",
-            "https://www.seco.admin.ch/seco/en/home/Arbeit/Arbeitsbedingungen.html",
-            "https://www.edoeb.admin.ch/edoeb/de/home/aktuell.html"
+            "https://www.seco.admin.ch/seco/de/home.html",
+            "https://www.edoeb.admin.ch/de/mitteilungen"
         ],
         "NL": [
             "https://wetten.overheid.nl/zoeken",
             "https://www.autoriteitpersoonsgegevens.nl/en/news",
-            "https://www.dnb.nl/en/news/"
+            "https://www.dnb.nl/en/general-news/?p=1&l=10"
         ],
         "IT": [
             "https://www.gazzettaufficiale.it/home",
-            "https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/9691942",
+            "https://www.garanteprivacy.it/home/",
             "https://www.bancaditalia.it/media/notizie/index.html"
         ],
         "ES": [
-            "https://www.aepd.es/en/press-and-communications/news",
+            "https://www.aepd.es/en/press-and-communication/press-releases",
             "https://www.boe.es/diario_boe/",
         ],
         "AT": [
-            "https://www.dsb.gv.at/",
-            "https://www.fma.gv.at/en/news/",
+            "https://dsb.gv.at/aktuelles/aktuelles",
+            "https://www.fma.gv.at/category/news/?cat=41",
         ],
         "BE": [
             "https://www.dataprotectionauthority.be/citizen/news",
-            "https://www.nbb.be/en/payments-and-securities/payment-standards/banking-standards",
+            "https://www.nbb.be/en/news-events/news/press-releases",
         ],
         "SE": [
             "https://www.imy.se/en/news/",
-            "https://www.fi.se/en/our-registers/news/",
+            "https://www.fi.se/en/published/all-published-material/",
         ],
         "IE": [
             "https://www.dataprotection.ie/en/news-media",
-            "https://www.centralbank.ie/regulation/industry-market-sectors/fintech",
+            "https://www.centralbank.ie/news-media/press-releases",
         ],
         "LU": [
             "https://cnpd.public.lu/en/actualites.html",
         ],
         "DK": [
-            "https://www.datatilsynet.dk/english/news",
+            "https://www.datatilsynet.dk/english/",
         ],
         "FI": [
-            "https://tietosuoja.fi/en/frontpage",
+            "https://tietosuoja.fi/en/home",
         ],
         "PT": [
-            "https://www.cnpd.pt/home/noticias.htm",
+            "https://www.cnpd.pt/",
         ],
         "CZ": [
-            "https://www.uoou.cz/en/",
+            "https://uoou.gov.cz/en/news",
         ],
         "HU": [
-            "https://naih.hu/en",
+            "https://naih.hu/",
         ],
         "RO": [
-            "https://www.dataprotection.ro/?page=Noutati",
+            "https://www.dataprotection.ro/?page=allnews",
         ],
     }
 
     industry_urls = {
         "DE": {
-            "fintech": ["https://www.bafin.de/EN/Aufsicht/FinTech/fintech_node_en.html"],
-            "healthcare": ["https://www.bfarm.de/EN/Home/_node.html"],
+            "fintech": ["https://www.bafin.de/EN/Homepage/homepage_node.html"],
+            "healthcare": ["https://www.bfarm.de/DE/Aktuelles/Presse/Pressemitteilungen/_node.html"],
         },
         "PL": {
-            "fintech": ["https://www.knf.gov.pl/en/"],
-            "healthcare": ["https://www.gov.pl/web/zdrowie"],
-        },
-        "FR": {
-            "fintech": ["https://acpr.banque-france.fr/en/fintech"],
-        },
-        "NL": {
-            "fintech": ["https://www.afm.nl/en/nieuws"],
-        },
-        "IE": {
-            "fintech": ["https://www.centralbank.ie/regulation/industry-market-sectors/fintech"],
+            "fintech": [
+                "https://www.knf.gov.pl/en/",
+            ],
         },
     }
 

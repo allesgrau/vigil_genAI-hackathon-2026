@@ -1,9 +1,7 @@
 1. sprawdź czy w scrapers/ serio każdy link istnieje i ogl też czy istnieją
-2. od-AI-owienie frontendu i kodu
-3. demo video
-4. ponowny "apify push" i publikacja na "https://console.apify.com/actors/eNNoBc9FzVUizvtOb"
-5. wystawienie aplikacji na publiczną domenę
-czy napewno jest wszystko w okienku czasowym 1 miesiąca?
+2. demo video
+3. ponowny "apify push" i publikacja na "https://console.apify.com/actors/eNNoBc9FzVUizvtOb"
+4. wystawienie aplikacji na publiczną domenę
 usunąć gówna z repo (np. storage)
 
 1. robimy README + onepager

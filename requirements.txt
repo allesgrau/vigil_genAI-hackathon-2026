@@ -2,6 +2,9 @@
 apify-client==2.0.0
 apify==3.0.0
 
+# OpenAI SDK (używany do OpenRouter)
+openai>=1.0.0
+
 # LangChain
 langchain==0.3.0
 langchain-community==0.3.0
@@ -13,8 +16,8 @@ beautifulsoup4==4.12.3
 # Data processing
 numpy==1.26.4
 
+# PDF generation
+reportlab>=4.0.0
+
 # Utils
 python-dotenv==1.0.1
-
-# Streamlit (frontend — later)
-streamlit==1.39.0

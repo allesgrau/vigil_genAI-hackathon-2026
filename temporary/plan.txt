@@ -1,12 +1,46 @@
-🔧 Faza 1 — Setup środowiska (30 min)
-🕷️ Faza 2 — Scrapers (2-3h)
-🧠 Faza 3 — RAG pipeline (2-3h)
-📝 Faza 4 — Digest & Alerty (2h)
-🚀 Faza 5 — Deployment (1h)
-🎯 Faza 6 — Polish pod hackathon (1h)
+1. sprawdź czy w scrapers/ serio każdy link istnieje i ogl też czy istnieją
+2. od-AI-owienie frontendu i kodu
+3. demo video
+4. ponowny "apify push" i publikacja na "https://console.apify.com/actors/eNNoBc9FzVUizvtOb"
+5. wystawienie aplikacji na publiczną domenę
 
-1. więcej krajów i więcej linków do scrapowania
-2. może dodać jakieś jeszcze ważne parametry w panelu po lewej, np. jaki to jest rodzaj spółki
-3. obsługa wielu języków obcych
-4. demo/ praz tests/ do zrobienia
-5. hackathonowy polish
+1. robimy README + onepager
+
+-----
+
+Wrzuć kod na GitHub (publiczne repo)
+Zaloguj się na share.streamlit.io
+Podłącz repo i ustaw zmienne środowiskowe (APIFY_TOKEN, OPENROUTER_ACTOR_URL)
+Deploy — gotowe, dostajesz link vigil.streamlit.app
+
+--
+
+Wrzuć repo na GitHub — czy już masz repo publiczne?
+
+bashgit init
+git add .
+git commit -m "feat: Vigil — regulatory intelligence for European SMEs"
+git remote add origin https://github.com/TwójUsername/vigil.git
+git push -u origin main
+
+Zaloguj się na https://share.streamlit.io — przez GitHub
+New app → wybierz repo → ustaw:
+
+Main file path: app.py
+Python version: 3.12
+
+Advanced settings → Secrets — wklej:
+APIFY_TOKEN = "twój_prawdziwy_token"
+OPENROUTER_ACTOR_URL = "https://openrouter.apify.actor/api/v1"
+
+Deploy! → dostajesz link vigil-xxx.streamlit.app
+
+-----
+
+rozszerzenia:
+- więcej szczegółowych parametrów w panelu po lewej
+- analogiczne funkcjonalności z ekonomią/geopolityką 
+- wielojęzyczność
+- więcej krajów, linków, słów kluczowych
+- wysyłanie powiadomień z alertem na maila 
+- ewaluacja z porównaniem różnych modeli i ich odpowiedzi

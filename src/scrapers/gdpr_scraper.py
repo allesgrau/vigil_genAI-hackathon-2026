@@ -15,6 +15,7 @@ async def scrape_gdpr(client: ApifyClient, company_profile: dict, test_mode: boo
             "https://edpb.europa.eu/our-work-tools/our-documents/guidelines_en",
             "https://gdpr.eu/what-is-gdpr/",
             "https://gdpr.eu/checklist/",
+            "https://gdpr.eu/category/news/"
         ]
         national_dpa = _get_national_dpa(country)
         if national_dpa:

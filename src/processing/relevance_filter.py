@@ -59,11 +59,24 @@ def _build_keywords(industry: str, country: str, areas: List[str]) -> List[str]:
     }
 
     country_keywords = {
-        "de": ["germany", "german", "bundesrat", "bundestag"],
-        "pl": ["poland", "polish", "sejm"],
-        "fr": ["france", "french"],
-        "ch": ["switzerland", "swiss"],
-        "nl": ["netherlands", "dutch"],
+        "de": ["germany", "german", "bundesrat", "bundestag", "bafin", "bsi", "bfdi"],
+        "pl": ["poland", "polish", "sejm", "uodo", "knf", "legislacja"],
+        "fr": ["france", "french", "cnil", "amf", "acpr"],
+        "ch": ["switzerland", "swiss", "finma", "edoeb"],
+        "nl": ["netherlands", "dutch", "ap", "dnb", "afm"],
+        "it": ["italy", "italian", "garante", "bankitalia"],
+        "es": ["spain", "spanish", "aepd", "cnmv"],
+        "at": ["austria", "austrian", "dsb", "fma"],
+        "be": ["belgium", "belgian", "apd", "nbb"],
+        "se": ["sweden", "swedish", "imy", "fi"],
+        "ie": ["ireland", "irish", "dpc", "central bank"],
+        "lu": ["luxembourg", "cnpd"],
+        "dk": ["denmark", "danish", "datatilsynet"],
+        "fi": ["finland", "finnish", "tietosuoja"],
+        "pt": ["portugal", "portuguese", "cnpd"],
+        "cz": ["czech", "uoou"],
+        "hu": ["hungary", "hungarian", "naih"],
+        "ro": ["romania", "romanian", "anspdcp"],
     }
 
     keywords.extend(industry_keywords.get(industry, []))

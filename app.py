@@ -9,6 +9,10 @@ from datetime import datetime
 from io import BytesIO
 
 load_dotenv()
+if hasattr(st, 'secrets'):
+    for key, value in st.secrets.items():
+        if key not in os.environ:
+            os.environ[key] = str(value)
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from apify_client import ApifyClient
@@ -742,7 +746,9 @@ with st.sidebar:
         "fintech", "healthcare", "ecommerce", "saas", "manufacturing"
     ])
     country = st.selectbox("Country", [
-        "DE", "PL", "FR", "CH", "NL", "IT", "ES", "AT", "BE", "SE"
+        # "DE", "PL", "FR", "CH", "NL", "IT", "ES", "AT", "BE", "SE"
+        "DE", "PL", "FR", "CH", "NL", "IT", "ES", "AT", "BE", "SE",
+        "IE", "LU", "DK", "FI", "PT", "CZ", "HU", "RO"
     ])
     size = st.selectbox("Company Size", ["startup", "sme", "enterprise"])
     areas = st.multiselect(

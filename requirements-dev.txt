@@ -1,0 +1,7 @@
+-r requirements.txt
+
+# Streamlit (frontend — later)
+streamlit==1.39.0
+
+# Development / testing
+pytest>=9.0.0

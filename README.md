@@ -5,6 +5,8 @@
 
 Built at **GenAI Zürich Hackathon 2026** · Powered by **Apify** · **OpenRouter** · **Claude**
 
+🌐 **Live demo:** https://vigil-demo.streamlit.app/
+
 ---
 
 ## What is Vigil?

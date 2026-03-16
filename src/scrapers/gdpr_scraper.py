@@ -19,7 +19,7 @@ async def scrape_gdpr(client: ApifyClient, company_profile: dict, test_mode: boo
         national_dpa = _get_national_dpa(country)
         if national_dpa:
             start_urls.append(national_dpa)
-        max_pages = 20
+        max_pages = 15
         max_depth = 1
 
     print(f"📡 Scraping GDPR sources {'[TEST MODE]' if test_mode else ''} ({len(start_urls)} URLs)...")

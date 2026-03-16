@@ -39,10 +39,11 @@ async def main():
         # Step 1: Scraping
         print("Scraping regulatory sources...")
         test_mode = company_profile.get("test_mode", False)
-        eurlex_docs = await scrape_eurlex(client, company_profile, test_mode=test_mode)
-        gdpr_docs = await scrape_gdpr(client, company_profile, test_mode=test_mode)
-        national_docs = await scrape_national(client, company_profile, test_mode=test_mode)
-
+        eurlex_docs, gdpr_docs, national_docs = await asyncio.gather(
+            scrape_eurlex(client, company_profile, test_mode=test_mode),
+            scrape_gdpr(client, company_profile, test_mode=test_mode),
+            scrape_national(client, company_profile, test_mode=test_mode)
+        )
         raw_documents = eurlex_docs + gdpr_docs + national_docs
         print(f"Total documents scraped: {len(raw_documents)}")
 

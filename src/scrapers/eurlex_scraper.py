@@ -11,7 +11,7 @@ async def scrape_eurlex(client: ApifyClient, company_profile: dict, test_mode: b
         max_pages = 3
         max_depth = 0
     else:
-        max_pages = 30
+        max_pages = 15
         max_depth = 1
 
     print(f"📡 Scraping {len(start_urls)} EUR-Lex sources {'[TEST MODE]' if test_mode else ''}")

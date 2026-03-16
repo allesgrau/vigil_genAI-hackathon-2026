@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vigil — One Pager</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: white;
+    color: #0f172a;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 14mm 16mm;
+    font-size: 8.5pt;
+    line-height: 1.4;
+  }
+
+  @media print {
+    body { padding: 12mm 14mm; }
+    @page { size: A4; margin: 0; }
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2563eb;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #2563eb, #6366f1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+  }
+
+  .logo-text h1 {
+    font-size: 20pt;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .logo-text p {
+    font-size: 8pt;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .header-right .badge {
+    display: inline-block;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #2563eb;
+    font-size: 7pt;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-bottom: 3px;
+  }
+
+  .header-right p {
+    font-size: 7pt;
+    color: #94a3b8;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #f0f4ff, #e8f0fe, #dbeafe);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+
+  .hero h2 {
+    font-size: 16pt;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.15;
+    margin-bottom: 5px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h2 span {
+    color: #2563eb;
+  }
+
+  .hero p {
+    font-size: 8.5pt;
+    color: #475569;
+    max-width: 420px;
+    line-height: 1.5;
+  }
+
+  /* TWO COLUMNS */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    margin-bottom: 6px;
+  }
+
+  /* CARD */
+  .card {
+    background: white;
+    border: 1px solid #e8edf5;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .card h3 {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .card p, .card li {
+    font-size: 7.5pt;
+    color: #475569;
+    line-height: 1.5;
+  }
+
+  .card ul {
+    padding-left: 12px;
+  }
+
+  .card li {
+    margin-bottom: 2px;
+  }
+
+  /* PIPELINE */
+  .pipeline {
+    background: #f8faff;
+    border: 1px solid #e8edf5;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+
+  .pipeline-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+  }
+
+  .step-box {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 7pt;
+    font-weight: 600;
+    color: #1e40af;
+    white-space: nowrap;
+  }
+
+  .step-arrow {
+    color: #94a3b8;
+    font-size: 8pt;
+    margin: 0 3px;
+  }
+
+  .step-sub {
+    font-size: 6pt;
+    color: #94a3b8;
+    text-align: center;
+    display: block;
+    margin-top: 1px;
+  }
+
+  /* HIGHLIGHT BOXES */
+  .highlight {
+    background: #eff6ff;
+    border-left: 3px solid #2563eb;
+    border-radius: 0 6px 6px 0;
+    padding: 6px 10px;
+    margin-bottom: 6px;
+  }
+
+  .highlight p {
+    font-size: 7.5pt;
+    color: #1e40af;
+    font-weight: 500;
+  }
+
+  .highlight span {
+    font-weight: 400;
+    color: #475569;
+  }
+
+  /* METRICS */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .metric {
+    background: white;
+    border: 1px solid #e8edf5;
+    border-radius: 8px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+
+  .metric .num {
+    font-size: 14pt;
+    font-weight: 800;
+    color: #2563eb;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .metric .label {
+    font-size: 6.5pt;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  /* CRITERIA TABLE */
+  .criteria {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+  }
+
+  .criteria th {
+    background: #1e40af;
+    color: white;
+    font-size: 7pt;
+    font-weight: 600;
+    padding: 5px 8px;
+    text-align: left;
+  }
+
+  .criteria td {
+    font-size: 7pt;
+    padding: 4px 8px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: top;
+    color: #334155;
+  }
+
+  .criteria tr:nth-child(even) td {
+    background: #f8faff;
+  }
+
+  .criteria td:first-child {
+    font-weight: 600;
+    color: #0f172a;
+    white-space: nowrap;
+  }
+
+  .tick { color: #16a34a; font-weight: 700; }
+  .cross { color: #ef4444; }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 6.5pt;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 100px;
+    border: 1px solid #bfdbfe;
+    margin: 1px;
+  }
+
+  .tag-green {
+    background: #f0fdf4;
+    color: #16a34a;
+    border-color: #bbf7d0;
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid #e8edf5;
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer p {
+    font-size: 6.5pt;
+    color: #94a3b8;
+  }
+
+  .footer strong {
+    color: #475569;
+  }
+
+  /* ALERT SAMPLE */
+  .alert-box {
+    border-left: 3px solid #ef4444;
+    background: #fff5f5;
+    border-radius: 0 6px 6px 0;
+    padding: 5px 8px;
+    margin-bottom: 4px;
+  }
+
+  .alert-box .title {
+    font-size: 7pt;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .alert-box .meta {
+    font-size: 6.5pt;
+    color: #64748b;
+  }
+
+  .alert-box-orange {
+    border-left-color: #f97316;
+    background: #fff8f0;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">🛡️</div>
+    <div class="logo-text">
+      <h1>Vigil</h1>
+      <p>EU Regulatory Intelligence for SMEs</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="badge">Apify Challenge – GenAI Zürich Hackathon 2026</div>
+    <p>Barbara Gawlik · Warsaw University of Technology</p>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h2>Stop paying lawyers<br>to <span>stay compliant.</span></h2>
+  <p>European SMEs spend thousands on legal consultants just to track EU regulatory changes. Vigil automates this – scraping live regulatory sources, extracting structured facts with AI, and delivering a personalized monthly digest with deadline alerts, strategic insights, and downloadable reports.</p>
+</div>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metric">
+    <div class="num">18</div>
+    <div class="label">EU Countries covered</div>
+  </div>
+  <div class="metric">
+    <div class="num">6</div>
+    <div class="label">Regulations tracked</div>
+  </div>
+  <div class="metric">
+    <div class="num">30+</div>
+    <div class="label">Live sources scraped</div>
+  </div>
+  <div class="metric">
+    <div class="num">22</div>
+    <div class="label">Integration tests</div>
+  </div>
+</div>
+
+<!-- PIPELINE -->
+<div class="pipeline">
+  <div class="section-title">⚙️ Technical pipeline – full RAG architecture</div>
+  <div class="pipeline-steps">
+    <div class="step">
+      <div>
+        <div class="step-box">Apify Scraping</div>
+        <span class="step-sub">website-content-crawler<br>parallel via asyncio.gather</span>
+      </div>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step">
+      <div>
+        <div class="step-box">Chunking</div>
+        <span class="step-sub">paragraph-level<br>with overlap</span>
+      </div>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step">
+      <div>
+        <div class="step-box">Fact Extraction</div>
+        <span class="step-sub">Claude 3 Haiku<br>→ structured JSON</span>
+      </div>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step">
+      <div>
+        <div class="step-box">Embedding</div>
+        <span class="step-sub">text-embedding-3-small<br>via OpenRouter</span>
+      </div>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step">
+      <div>
+        <div class="step-box">Two-step Retrieval</div>
+        <span class="step-sub">keyword filter<br>+ cosine similarity</span>
+      </div>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step">
+      <div>
+        <div class="step-box">Digest + Alerts</div>
+        <span class="step-sub">Claude 3 Haiku<br>personalized output</span>
+      </div>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step">
+      <div>
+        <div class="step-box">PDF / MD Export</div>
+        <span class="step-sub">Apify dataset<br>+ download</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TWO COLUMNS: KEY INNOVATIONS + APIFY INTEGRATION -->
+<div class="two-col">
+
+  <div>
+    <div class="section-title">🧠 Key technical innovations</div>
+
+    <div class="highlight">
+      <p>Fact-based embeddings <span>– LLM extracts discrete regulatory facts (claim, regulation, article, deadline, action_required, severity) before embedding. Far more precise than chunk-level retrieval.</span></p>
+    </div>
+
+    <div class="highlight">
+      <p>Two-step hybrid retrieval <span>– keyword pre-filter with industry/country/regulation-specific keywords, then cosine similarity on the filtered subset.</span></p>
+    </div>
+
+    <div class="highlight">
+      <p>Recency-constrained prompts <span>– all LLM prompts include today's date and a 30-day window. LLM explicitly instructed to ignore historical background and report only recent changes.</span></p>
+    </div>
+
+    <div class="highlight">
+      <p>Dual-mode output <span>– same pipeline powers both Apify Actor (JSON dataset) and Streamlit frontend (interactive UI with PDF/Markdown export).</span></p>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-title">🔗 Deep Apify integration</div>
+
+    <div class="card" style="margin-bottom: 6px;">
+      <h3>📦 Published Actor</h3>
+      <p>Fully packaged as a reusable Apify Actor with input schema, Dockerfile, and dataset output. Accepts any company profile as JSON input.</p>
+    </div>
+
+    <div class="card" style="margin-bottom: 6px;">
+      <h3>🕷️ website-content-crawler</h3>
+      <p>Used for all scraping – EUR-Lex, EDPB, GDPR.eu, and 30+ national regulatory sources. Three scrapers run in parallel via asyncio.gather.</p>
+    </div>
+
+    <div class="card">
+      <h3>🤖 OpenRouter via Apify Standby</h3>
+      <p>All LLM calls (Claude 3 Haiku) and embeddings (text-embedding-3-small) routed through Apify's OpenRouter Actor – no external API keys needed beyond APIFY_TOKEN.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- THREE COLUMNS: FEATURES -->
+<div class="three-col">
+
+  <div class="card">
+    <h3>📋 Monthly digest</h3>
+    <ul>
+      <li>What changed in the last 30 days</li>
+      <li>Why it matters for <em>your</em> business</li>
+      <li>Concrete next steps</li>
+      <li>Strategic forward-looking insights</li>
+      <li>Upcoming deadlines (90-day horizon)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🚨 Alerts</h3>
+    <div class="alert-box" style="margin-top: 4px;">
+      <div class="title">🔴 GDPR Compliance</div>
+      <div class="meta">Deadline: 2026-04-15 · Data protection impact assessment required</div>
+    </div>
+    <div class="alert-box alert-box-orange">
+      <div class="title">🟠 PSD2 Compliance</div>
+      <div class="meta">Deadline: Immediate · Strong customer authentication required</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📚 Regulation Library</h3>
+    <p>AI-generated explainers for each monitored regulation – personalized to the company's industry and country. Cached per profile to avoid redundant API calls.</p>
+    <div style="margin-top: 5px;">
+      <span class="tag">GDPR</span>
+      <span class="tag">AI Act</span>
+      <span class="tag">PSD2</span>
+      <span class="tag">NIS2</span>
+      <span class="tag">DORA</span>
+      <span class="tag">AML</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- JUDGING CRITERIA TABLE -->
+<div class="section-title">📊 Judging criteria – how Vigil addresses each</div>
+<table class="criteria">
+  <thead>
+    <tr>
+      <th style="width: 22%">Criterion</th>
+      <th style="width: 40%">What Vigil does</th>
+      <th style="width: 38%">Specific evidence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Innovation &amp; technical quality</td>
+      <td>Fact-based embeddings (novel over chunk-based), two-step hybrid retrieval, parallel async scraping, recency-constrained prompts</td>
+      <td>22 integration tests passing · Full RAG pipeline · Structured fact JSON schema with severity/deadline/action fields</td>
+    </tr>
+    <tr>
+      <td>Effective use of GenAI</td>
+      <td>LLM used at 3 pipeline stages: fact extraction, digest generation, plain-language translation. Each with carefully engineered prompts.</td>
+      <td>Claude 3 Haiku via OpenRouter · text-embedding-3-small · Prompt templates with today's date + 30-day window</td>
+    </tr>
+    <tr>
+      <td>Business / Societal value</td>
+      <td>Directly addresses €billions spent on compliance lawyers by EU SMEs. Saves time, reduces risk of missed deadlines, democratizes regulatory intelligence.</td>
+      <td>Personalized per industry + country · Works for 18 EU countries · 6 major EU regulations · PDF reports ready to share with legal team</td>
+    </tr>
+    <tr>
+      <td>Feasibility &amp; Scalability</td>
+      <td>Packaged as Apify Actor for serverless deployment. Cache layer for instant repeat queries. Parallel scraping for speed.</td>
+      <td>Published Actor on Apify · Dockerfile · Input schema · ~$0.10 per run in test_mode · ~$10 for full run</td>
+    </tr>
+    <tr>
+      <td>Apify challenge criteria</td>
+      <td>Published functional Actor that uses live web data to solve a real business problem. RAG application path.</td>
+      <td><span class="tick">✓</span> Published Actor · <span class="tick">✓</span> website-content-crawler integration · <span class="tick">✓</span> OpenRouter via Apify · <span class="tick">✓</span> Dataset output · <span class="tick">✓</span> End-to-end working</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p><strong>Vigil</strong> · EU Regulatory Intelligence · <br>
+  Built at GenAI Zürich Hackathon 2026</p>
+  <p>Powered by <strong>Apify</strong> · <strong>OpenRouter</strong> · <strong>Claude</strong> · <strong>Streamlit</strong></p>
+  <p><strong>Barbara Gawlik</strong> · Warsaw University of Technology<br>
+  Solo team</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "regulation": "AI Act",
+  "article": "Article 5 - Prohibited AI Practices",
+  "days_remaining": 365,
+  "action_required": "TechStartup GmbH must ensure that it does not develop, deploy, or use any AI systems that engage in the prohibited practices outlined in Article 5 of the AI Act, such as harmful manipulation, social scoring, or remote biometric identification in publicly accessible spaces.",
+  "severity": "critical"
+}

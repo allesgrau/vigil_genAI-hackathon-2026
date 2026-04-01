@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-04-01T00:09:06.864045",
+  "company_name": "TechStartup GmbH",
+  "industry": "fintech",
+  "country": "DE",
+  "areas_of_concern": [
+    "GDPR",
+    "AI Act",
+    "PSD2"
+  ],
+  "sources_analyzed": 10,
+  "alerts_count": 0,
+  "critical_alerts": [],
+  "high_alerts": [],
+  "medium_alerts": [],
+  "digest_markdown": "## URGENT – Action required this month\nNothing urgent this month.\n\n## MONTHLY DIGEST – what changed?\nNo new regulatory changes in the past 30 days.\n\n## STRATEGIC INSIGHTS\n1. The General Data Protection Regulation (GDPR) remains a critical compliance area for TechStartup GmbH, as it applies to any organization that processes personal data of EU residents, regardless of the company's location. It's important to continuously monitor GDPR developments and ensure your data processing activities are aligned with the regulation.\n\n2. The proposed AI Act, once finalized and implemented, will establish a comprehensive framework for the development and use of artificial intelligence systems in the EU. As a fintech company, TechStartup GmbH should closely follow the progress of the AI Act and assess how it may impact your products and services.\n\n3. The Payment Services Directive 2 (PSD2) continues to be relevant for TechStartup GmbH as a fintech company, as it aims to promote innovation and competition in the payment services market. While there are no recent updates, it's important to stay informed about any future changes to PSD2 that may affect your business.\n\n## UPCOMING DEADLINES",
+  "plain_summaries": [
+    {
+      "title": "This month's key changes",
+      "url": "",
+      "source": "Vigil Analysis",
+      "plain_summary": "1. There have been no new regulatory changes in the past 30 days that would impact your fintech business in DE.\n\n2. The regulations have remained stable, and there are no recent updates to be aware of.\n\n3. Since there are no new changes, your company can continue operating under the existing regulatory framework without needing to take any immediate action.",
+      "relevance_score": 1.0
+    }
+  ],
+  "full_report_markdown": "# 🛡️ Vigil – Monthly regulatory digest\n\n**Company:** TechStartup GmbH\n**Industry:** fintech | **Country:** DE\n**Monitoring:** GDPR, AI Act, PSD2\n**Generated:** April 01, 2026 at 00:09 UTC\n**Sources analyzed:** 10\n\n---\n\n## 🚨 ALERTS\n\n✅ No urgent alerts this month.\n\n---\n\n## 📋 MONTHLY DIGEST\n\n## URGENT – Action required this month\nNothing urgent this month.\n\n## MONTHLY DIGEST – what changed?\nNo new regulatory changes in the past 30 days.\n\n## STRATEGIC INSIGHTS\n1. The General Data Protection Regulation (GDPR) remains a critical compliance area for TechStartup GmbH, as it applies to any organization that processes personal data of EU residents, regardless of the company's location. It's important to continuously monitor GDPR developments and ensure your data processing activities are aligned with the regulation.\n\n2. The proposed AI Act, once finalized and implemented, will establish a comprehensive framework for the development and use of artificial intelligence systems in the EU. As a fintech company, TechStartup GmbH should closely follow the progress of the AI Act and assess how it may impact your products and services.\n\n3. The Payment Services Directive 2 (PSD2) continues to be relevant for TechStartup GmbH as a fintech company, as it aims to promote innovation and competition in the payment services market. While there are no recent updates, it's important to stay informed about any future changes to PSD2 that may affect your business.\n\n## UPCOMING DEADLINES\n\n---\n\n## 🗣️ PLAIN LANGUAGE SUMMARIES\n_What does this actually mean for your business?_\n\n### 1. This month's key changes\n**Source:** [Vigil Analysis]()\n\n1. There have been no new regulatory changes in the past 30 days that would impact your fintech business in DE.\n\n2. The regulations have remained stable, and there are no recent updates to be aware of.\n\n3. Since there are no new changes, your company can continue operating under the existing regulatory framework without needing to take any immediate action.\n\n\n---\n\n*Vigil is an AI-powered regulatory intelligence tool built for European SMEs.*\n*Always consult a qualified legal professional for compliance decisions.*\n*Built at GenAI Zurich Hackathon 2026.*\n",
+  "status": "success",
+  "vigil_version": "0.1.0"
+}

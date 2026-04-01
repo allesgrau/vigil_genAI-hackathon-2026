@@ -1,0 +1,245 @@
+[
+  {
+    "claim": "The General Data Protection Regulation (GDPR) applies to the processing of personal data by controllers and processors in the EU, regardless of whether the processing takes place in the EU or not.",
+    "regulation": "GDPR",
+    "article": "Article 3",
+    "applies_to": [
+      "data controllers",
+      "data processors"
+    ],
+    "deadline": null,
+    "action_required": null,
+    "severity": "critical",
+    "source_url": "https://eur-lex.europa.eu/oj/direct-access.html",
+    "keywords": [
+      "personal data",
+      "data controller",
+      "data processor",
+      "EU"
+    ],
+    "fact_id": "fact_8536511947146678985",
+    "embedding": null
+  },
+  {
+    "claim": "The Payment Services Directive 2 (PSD2) aims to promote innovation and competition in the payment services market by opening up the market to new entrants and allowing consumers to benefit from more choice and better services.",
+    "regulation": "PSD2",
+    "article": null,
+    "applies_to": [
+      "payment service providers",
+      "fintech companies"
+    ],
+    "deadline": null,
+    "action_required": null,
+    "severity": "high",
+    "source_url": "https://eur-lex.europa.eu/oj/direct-access.html",
+    "keywords": [
+      "payment services",
+      "innovation",
+      "competition",
+      "fintech"
+    ],
+    "fact_id": "fact_7636509426357783469",
+    "embedding": null
+  },
+  {
+    "claim": "The proposed AI Act aims to establish a comprehensive framework for the development, deployment, and use of artificial intelligence (AI) systems in the European Union, focusing on ensuring AI's safety and trustworthiness.",
+    "regulation": "AI Act",
+    "article": null,
+    "applies_to": [
+      "AI developers",
+      "AI deployers",
+      "EU member states"
+    ],
+    "deadline": null,
+    "action_required": null,
+    "severity": "high",
+    "source_url": "https://eur-lex.europa.eu/oj/direct-access.html",
+    "keywords": [
+      "artificial intelligence",
+      "EU",
+      "regulation",
+      "safety",
+      "trustworthiness"
+    ],
+    "fact_id": "fact_420631315294631349",
+    "embedding": null
+  },
+  {
+    "claim": "The Official Journal of the European Communities was created by the Decisions of the Councils of the European Economic Community and of the European Atomic Energy Community of 15 September 1958.",
+    "regulation": null,
+    "article": null,
+    "applies_to": [
+      "European Union"
+    ],
+    "deadline": null,
+    "action_required": null,
+    "severity": "medium",
+    "source_url": "https://eur-lex.europa.eu/oj/direct-access.html",
+    "keywords": [
+      "Official Journal",
+      "European Union",
+      "1958"
+    ],
+    "fact_id": "fact_-6084687823292982184",
+    "embedding": null
+  },
+  {
+    "claim": "As of July 2013, only the electronic edition of the Official Journal published on EUR-Lex is authentic and produces legal effects.",
+    "regulation": null,
+    "article": null,
+    "applies_to": [
+      "European Union"
+    ],
+    "deadline": "July 2013",
+    "action_required": null,
+    "severity": "medium",
+    "source_url": "https://eur-lex.europa.eu/oj/direct-access.html",
+    "keywords": [
+      "Official Journal",
+      "EUR-Lex",
+      "legal effects"
+    ],
+    "fact_id": "fact_3935036138073602003",
+    "embedding": null
+  },
+  {
+    "claim": "From 01 October 2023, the Official Journal is no longer a collation of acts with a table of contents, and each act is published individually as an authentic Official Journal in its PDF format.",
+    "regulation": null,
+    "article": null,
+    "applies_to": [
+      "European Union"
+    ],
+    "deadline": "01 October 2023",
+    "action_required": null,
+    "severity": "medium",
+    "source_url": "https://eur-lex.europa.eu/oj/direct-access.html",
+    "keywords": [
+      "Official Journal",
+      "PDF",
+      "publication format"
+    ],
+    "fact_id": "fact_-3795900418827766802",
+    "embedding": null
+  },
+  {
+    "claim": "The Official Journal currently comprises 2 series: L - Legislation, with mostly EU secondary law, and C - Information and notices, containing preparatory acts, announcements, and other EU-related content.",
+    "regulation": null,
+    "article": null,
+    "applies_to": [
+      "European Union"
+    ],
+    "deadline": null,
+    "action_required": null,
+    "severity": "medium",
+    "source_url": "https://eur-lex.europa.eu/oj/direct-access.html",
+    "keywords": [
+      "Official Journal",
+      "series",
+      "legislation",
+      "information"
+    ],
+    "fact_id": "fact_6723923252160373720",
+    "embedding": null
+  },
+  {
+    "claim": "The General Data Protection Regulation (GDPR) is the toughest privacy and security law in the world and imposes obligations onto organizations anywhere, so long as they target or collect data related to people in the EU.",
+    "regulation": "GDPR",
+    "article": null,
+    "applies_to": [
+      "all organizations that target or collect data from EU individuals"
+    ],
+    "deadline": null,
+    "action_required": null,
+    "severity": "critical",
+    "source_url": "https://gdpr.eu/what-is-gdpr/",
+    "keywords": [
+      "GDPR",
+      "data privacy",
+      "data security",
+      "EU",
+      "global application"
+    ],
+    "fact_id": "fact_3598216538763126941",
+    "embedding": null
+  },
+  {
+    "claim": "The GDPR was put into effect on May 25, 2018 and will levy harsh fines against those who violate its privacy and security standards, with penalties reaching into the tens of millions of euros.",
+    "regulation": "GDPR",
+    "article": null,
+    "applies_to": [
+      "all organizations that violate GDPR standards"
+    ],
+    "deadline": "May 25, 2018",
+    "action_required": "Comply with GDPR standards",
+    "severity": "critical",
+    "source_url": "https://gdpr.eu/what-is-gdpr/",
+    "keywords": [
+      "GDPR",
+      "fines",
+      "penalties",
+      "compliance"
+    ],
+    "fact_id": "fact_-8065762623842820118",
+    "embedding": null
+  },
+  {
+    "claim": "The GDPR will levy harsh fines against those who violate its privacy and security standards, with penalties reaching into the tens of millions of euros.",
+    "regulation": "GDPR",
+    "article": null,
+    "applies_to": [
+      "organizations that violate GDPR"
+    ],
+    "deadline": null,
+    "action_required": null,
+    "severity": "critical",
+    "source_url": "https://gdpr.eu/what-is-gdpr/",
+    "keywords": [
+      "fines",
+      "penalties",
+      "privacy",
+      "security"
+    ],
+    "fact_id": "fact_2556744272086754624",
+    "embedding": null
+  },
+  {
+    "claim": "The GDPR is large, far-reaching, and fairly light on specifics, making GDPR compliance a daunting prospect, particularly for small and medium-sized enterprises (SMEs).",
+    "regulation": "GDPR",
+    "article": null,
+    "applies_to": [
+      "small and medium-sized enterprises"
+    ],
+    "deadline": null,
+    "action_required": null,
+    "severity": "high",
+    "source_url": "https://gdpr.eu/what-is-gdpr/",
+    "keywords": [
+      "compliance",
+      "SMEs",
+      "far-reaching",
+      "specifics"
+    ],
+    "fact_id": "fact_-8297192661118465750",
+    "embedding": null
+  },
+  {
+    "claim": "The right to privacy is part of the 1950 European Convention on Human Rights, which states, 'Everyone has the right to respect for his private and family life, his home and his correspondence.'",
+    "regulation": "GDPR",
+    "article": null,
+    "applies_to": [
+      "all individuals"
+    ],
+    "deadline": null,
+    "action_required": null,
+    "severity": "medium",
+    "source_url": "https://gdpr.eu/what-is-gdpr/",
+    "keywords": [
+      "privacy",
+      "human rights",
+      "European Convention",
+      "private life"
+    ],
+    "fact_id": "fact_6204410982128182555",
+    "embedding": null
+  }
+]

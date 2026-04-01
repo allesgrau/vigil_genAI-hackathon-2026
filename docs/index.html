@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigil — Find. Warn. Report. Protect.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #0a1628;
+            --navy-light: #0f2140;
+            --navy-mid: #132d5e;
+            --cyan: #22d3ee;
+            --cyan-dim: #0e7490;
+            --white: #f0f4ff;
+            --gray: #94a3b8;
+            --red: #ef4444;
+            --orange: #f59e0b;
+            --green: #22c55e;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--navy);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(10, 22, 40, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(34, 211, 238, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .nav-logo .shield {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-dim));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--cyan);
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--cyan), #06b6d4, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Pipeline steps */
+        .pipeline {
+            display: flex;
+            gap: 0;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pipeline-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pipeline-step .num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .pipeline-step .label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .pipeline-arrow {
+            color: var(--cyan-dim);
+            font-size: 1.2rem;
+            margin: 0 0.3rem;
+            opacity: 0.5;
+        }
+
+        .step-find .num { background: rgba(34, 211, 238, 0.15); color: var(--cyan); }
+        .step-warn .num { background: rgba(245, 158, 11, 0.15); color: var(--orange); }
+        .step-report .num { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+        .step-protect .num { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+
+        .step-find .label { color: var(--cyan); }
+        .step-warn .label { color: var(--orange); }
+        .step-report .label { color: var(--red); }
+        .step-protect .label { color: var(--green); }
+
+        /* Sections */
+        section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        section h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        section h2 span {
+            background: linear-gradient(135deg, var(--cyan), #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        section .subtitle {
+            color: var(--gray);
+            font-size: 1.05rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.15), transparent);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Cards grid */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: rgba(34, 211, 238, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .card .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--cyan);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: gap 0.2s;
+        }
+
+        .card-link:hover {
+            gap: 0.7rem;
+        }
+
+        /* Pipeline section — 4 steps */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .steps-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .step-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 1.8rem;
+            text-align: center;
+        }
+
+        .step-card .step-num {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .step-card h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 0.6rem;
+        }
+
+        .step-card p {
+            color: var(--gray);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .step-card.find { border-top: 3px solid var(--cyan); }
+        .step-card.find .step-num, .step-card.find h3 { color: var(--cyan); }
+        .step-card.warn { border-top: 3px solid var(--orange); }
+        .step-card.warn .step-num, .step-card.warn h3 { color: var(--orange); }
+        .step-card.report { border-top: 3px solid var(--red); }
+        .step-card.report .step-num, .step-card.report h3 { color: var(--red); }
+        .step-card.protect { border-top: 3px solid var(--green); }
+        .step-card.protect .step-num, .step-card.protect h3 { color: var(--green); }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.9rem 1.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--cyan), #0ea5e9);
+            color: var(--navy);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .btn-outline:hover {
+            border-color: rgba(34, 211, 238, 0.4);
+            background: rgba(34, 211, 238, 0.05);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Tech stack */
+        .tech-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .tech-pill {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--gray);
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        footer a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        /* Architecture (nerdy corner) */
+        .arch-box {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .arch-box pre {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: var(--gray);
+            overflow-x: auto;
+        }
+
+        .arch-box pre .highlight { color: var(--cyan); font-weight: 600; }
+        .arch-box pre .warn { color: var(--orange); }
+        .arch-box pre .err { color: var(--red); }
+        .arch-box pre .ok { color: var(--green); }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <a href="#" class="nav-logo">
+        <div class="shield">V</div>
+        Vigil
+    </a>
+    <div class="nav-links">
+        <a href="#what">About</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#explore">Explore</a>
+        <a href="#architecture">Architecture</a>
+    </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="hero-badge">EU Regulatory Compliance Agent</div>
+    <h1><span>Find. Warn.</span><br><span>Report. Protect.</span></h1>
+    <p>Vigil monitors EU regulations in real time, identifies companies at risk, and delivers actionable compliance alerts — before the deadline hits.</p>
+
+    <div class="pipeline">
+        <div class="pipeline-step step-find">
+            <div class="num">1</div>
+            <div class="label">Find</div>
+        </div>
+        <span class="pipeline-arrow">&rarr;</span>
+        <div class="pipeline-step step-warn">
+            <div class="num">2</div>
+            <div class="label">Warn</div>
+        </div>
+        <span class="pipeline-arrow">&rarr;</span>
+        <div class="pipeline-step step-report">
+            <div class="num">3</div>
+            <div class="label">Report</div>
+        </div>
+        <span class="pipeline-arrow">&rarr;</span>
+        <div class="pipeline-step step-protect">
+            <div class="num">4</div>
+            <div class="label">Protect</div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <a href="#explore" class="btn btn-primary">Explore Vigil</a>
+        <a href="#pipeline" class="btn btn-outline">How it works</a>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- What is Vigil -->
+<section id="what">
+    <h2><span>What is</span> Vigil?</h2>
+    <p class="subtitle">An AI-powered compliance agent that finds businesses at risk of regulatory non-compliance, warns them proactively, and helps them fix the issues — automatically.</p>
+
+    <div class="cards" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="card">
+            <div class="icon" style="background: rgba(239, 68, 68, 0.1);">!</div>
+            <h3>The problem</h3>
+            <p>150 billion EUR spent on compliance annually. 55% of EU SMEs say compliance is their biggest burden. Most find out about a regulation when the fine arrives.</p>
+        </div>
+        <div class="card">
+            <div class="icon" style="background: rgba(34, 211, 238, 0.1);">V</div>
+            <h3>The solution</h3>
+            <p>Vigil scrapes regulatory sources and business registries, identifies companies at risk, calls them with an automated alert, sends a detailed legal report, and scans their code for compliance issues.</p>
+        </div>
+        <div class="card">
+            <div class="icon" style="background: rgba(34, 197, 94, 0.1);">$</div>
+            <h3>The business</h3>
+            <p>First alert is free. Subscription from EUR 19/month for continuous monitoring, compliance reports, and the /vigil code scanner. 99.5% gross margin.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 4-Step Pipeline -->
+<section id="pipeline">
+    <h2><span>How Vigil</span> works</h2>
+    <p class="subtitle">A 4-step pipeline that bridges the gap between regulatory change and engineering action.</p>
+
+    <div class="steps-grid">
+        <div class="step-card find">
+            <div class="step-num">Step 1</div>
+            <h3>Find</h3>
+            <p>Scrape EU regulatory sources (EUR-Lex, EDPB) and business registries via Apify. Extract compliance facts with Claude. Match companies to risks.</p>
+        </div>
+        <div class="step-card warn">
+            <div class="step-num">Step 2</div>
+            <h3>Warn</h3>
+            <p>An AI agent calls the company with a 15-second automated compliance alert. Specific regulation, specific deadline, specific action required.</p>
+        </div>
+        <div class="step-card report">
+            <div class="step-num">Step 3</div>
+            <h3>Report</h3>
+            <p>A detailed, legally specific compliance report is sent by email. Business-friendly language, exact articles cited, numbered action steps, auditor implications.</p>
+        </div>
+        <div class="step-card protect">
+            <div class="step-num">Step 4</div>
+            <h3>Protect</h3>
+            <p>Engineers type <code>/vigil</code> in their terminal. The entire codebase is scanned for GDPR, AI Act, NIS2, and DORA compliance issues with specific file paths and fixes.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Explore Vigil — 5 entry points -->
+<section id="explore">
+    <h2><span>Explore</span> Vigil</h2>
+    <p class="subtitle">Five entry points into the Vigil ecosystem.</p>
+
+    <div class="cards">
+        <div class="card">
+            <div class="icon" style="background: rgba(34, 211, 238, 0.1); color: var(--cyan);">1</div>
+            <h3>Live Pipeline Demo</h3>
+            <p>Watch Vigil scrape regulations, discover a company, match risks, and place a live phone call — all in under 2 minutes. Zero mocks.</p>
+            <a href="https://github.com/allesgrau/vigil_genAI-hackathon-2026" class="card-link" target="_blank">View on GitHub &rarr;</a>
+        </div>
+
+        <div class="card">
+            <div class="icon" style="background: rgba(245, 158, 11, 0.1); color: var(--orange);">2</div>
+            <h3>Compliance Dashboard</h3>
+            <p>Generate personalized regulatory digests, explore the regulation library, and download compliance reports. Built for compliance officers and management.</p>
+            <a href="https://vigil-demo.streamlit.app" class="card-link" target="_blank">Open Dashboard &rarr;</a>
+        </div>
+
+        <div class="card">
+            <div class="icon" style="background: rgba(34, 197, 94, 0.1); color: var(--green);">3</div>
+            <h3>/vigil Code Scanner</h3>
+            <p>Install the /vigil skill for Claude Code. Scan any codebase for GDPR, AI Act, NIS2, DORA, and PSD2 compliance issues. Step-by-step setup for Windows and Mac.</p>
+            <a href="vigil-skill.html" class="card-link">Setup Instructions &rarr;</a>
+        </div>
+
+        <div class="card">
+            <div class="icon" style="background: rgba(239, 68, 68, 0.1); color: var(--red);">4</div>
+            <h3>Landing Page</h3>
+            <p>The public-facing product page. See pricing, features, and the value proposition as a potential customer would see it.</p>
+            <a href="https://v0-vigil-landing-page-eight.vercel.app" class="card-link" target="_blank">View Landing Page &rarr;</a>
+        </div>
+
+        <div class="card">
+            <div class="icon" style="background: rgba(148, 163, 184, 0.1); color: var(--gray);">5</div>
+            <h3>Pipeline Monitor</h3>
+            <p>Real-time view of Vigil's pipeline activity — regulatory sources scraped, companies discovered, calls placed, reports sent. Live data from SQLite.</p>
+            <a href="http://localhost:8502" class="card-link" target="_blank">Open Monitor &rarr;</a>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Architecture (Nerdy Corner) -->
+<section id="architecture">
+    <h2><span>Architecture</span></h2>
+    <p class="subtitle">For the technically curious. The full system architecture and tech stack.</p>
+
+    <div class="steps-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="step-card" style="border-top: 3px solid var(--cyan); text-align: left;">
+            <div class="step-num" style="color: var(--cyan);">Scraping & Intelligence</div>
+            <p><strong style="color: var(--white);">Apify</strong> — website-content-crawler for EUR-Lex, EDPB, business registries. OpenRouter gateway for LLM access.</p>
+            <p style="margin-top: 0.5rem;"><strong style="color: var(--white);">Claude 3 Haiku</strong> — fact extraction, risk matching, script generation, compliance report generation.</p>
+        </div>
+        <div class="step-card" style="border-top: 3px solid var(--orange); text-align: left;">
+            <div class="step-num" style="color: var(--orange);">Outreach Engine</div>
+            <p><strong style="color: var(--white);">Twilio Voice</strong> — automated compliance alert calls with TwiML. Keypress handling via webhooks.</p>
+            <p style="margin-top: 0.5rem;"><strong style="color: var(--white);">SendGrid</strong> — HTML compliance reports with actionable findings and legal citations.</p>
+        </div>
+        <div class="step-card" style="border-top: 3px solid var(--green); text-align: left;">
+            <div class="step-num" style="color: var(--green);">Platform</div>
+            <p><strong style="color: var(--white);">FastAPI</strong> — webhook server with ngrok tunnel. SQLite for company and outreach data.</p>
+            <p style="margin-top: 0.5rem;"><strong style="color: var(--white);">Streamlit</strong> — subscriber dashboard. <strong style="color: var(--white);">Claude Code Skill</strong> — /vigil code scanner.</p>
+        </div>
+    </div>
+
+    <div class="arch-box">
+        <pre>
+<span class="highlight">VIGIL SYSTEM ARCHITECTURE</span>
+
+<span class="highlight">FIND</span>                          <span class="warn">WARN</span>                      <span class="err">REPORT</span>                    <span class="ok">PROTECT</span>
+ |                              |                          |                          |
+ Apify Crawler ──────┐     Twilio Voice ──────┐     Claude Report Gen ───┐     Claude Code Skill
+   EUR-Lex           |       TwiML + Gather   |       Legally specific   |       /vigil command
+   EDPB              |       15-sec alert     |       Business-friendly  |       Code scanning
+   Registries        |       Auto-fallback    |       Action items       |       10 risk categories
+                     v       to email         v       Auditor warnings   v       File paths + fixes
+              Claude Haiku            SendGrid                    SendGrid
+              Fact extraction         HTML email                  Full report              Claude Sonnet
+              Risk matching                                                                Deep analysis
+              Script generation
+        </pre>
+    </div>
+
+    <div class="tech-row">
+        <span class="tech-pill">Apify</span>
+        <span class="tech-pill">Claude (Haiku + Sonnet)</span>
+        <span class="tech-pill">Twilio Voice</span>
+        <span class="tech-pill">SendGrid</span>
+        <span class="tech-pill">FastAPI</span>
+        <span class="tech-pill">SQLite</span>
+        <span class="tech-pill">Streamlit</span>
+        <span class="tech-pill">ngrok</span>
+        <span class="tech-pill">OpenRouter</span>
+        <span class="tech-pill">Python</span>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>
+        <strong style="color: var(--white);">Vigil</strong> — Find. Warn. Report. Protect.<br>
+        Built by <a href="https://github.com/allesgrau" target="_blank">Basia Gawlik</a> at
+        <strong style="color: var(--white);">GenAI Zurich Hackathon 2026</strong><br><br>
+        <a href="https://github.com/allesgrau/vigil_genAI-hackathon-2026" target="_blank">GitHub</a> &middot;
+        <a href="https://vigil-demo.streamlit.app" target="_blank">Dashboard</a> &middot;
+        <a href="https://v0-vigil-landing-page-eight.vercel.app" target="_blank">Landing Page</a>
+    </p>
+</footer>
+
+</body>
+</html>

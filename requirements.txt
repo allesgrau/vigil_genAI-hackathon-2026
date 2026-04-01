@@ -17,6 +17,7 @@ reportlab>=4.0.0
 
 # Streamlit
 streamlit-autorefresh>=1.0.0
+pyarrow>=14.0.0
 
 # Utils
 python-dotenv==1.0.1

@@ -57,8 +57,8 @@ st.markdown("""
     }
 
     .stApp {
-        background: #f8faff;
-        color: #1a1f36;
+        background: #0a1628;
+        color: #f0f4ff;
     }
 
     header[data-testid="stHeader"] {
@@ -67,14 +67,14 @@ st.markdown("""
 
     .stTabs [data-baseweb="tab-list"] {
         background: transparent !important;
-        border-bottom: 1px solid #e8edf5 !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
         gap: 0 !important;
     }
 
     .stTabs [data-baseweb="tab"] {
         background: transparent !important;
-        color: #64748b !important;
-        -webkit-text-fill-color: #64748b !important;
+        color: #94a3b8 !important;
+        -webkit-text-fill-color: #94a3b8 !important;
         font-weight: 600 !important;
         font-size: 0.95rem !important;
         padding: 0.8rem 1.5rem !important;
@@ -82,9 +82,9 @@ st.markdown("""
     }
 
     .stTabs [aria-selected="true"] {
-        color: #2563eb !important;
-        -webkit-text-fill-color: #2563eb !important;
-        border-bottom: 2px solid #2563eb !important;
+        color: #22d3ee !important;
+        -webkit-text-fill-color: #22d3ee !important;
+        border-bottom: 2px solid #22d3ee !important;
         background: transparent !important;
     }
 
@@ -95,34 +95,34 @@ st.markdown("""
     }
 
     section[data-testid="stSidebar"] {
-        background: #ffffff !important;
-        border-right: 1px solid #e8edf5;
+        background: #0f2140 !important;
+        border-right: 1px solid rgba(255,255,255,0.06);
     }
 
     section[data-testid="stSidebar"] * {
-        color: #1a1f36 !important;
-        -webkit-text-fill-color: #1a1f36 !important;
+        color: #f0f4ff !important;
+        -webkit-text-fill-color: #f0f4ff !important;
     }
 
     section[data-testid="stSidebar"] label {
-        color: #374151 !important;
-        -webkit-text-fill-color: #374151 !important;
+        color: #94a3b8 !important;
+        -webkit-text-fill-color: #94a3b8 !important;
         font-weight: 500 !important;
     }
 
     section[data-testid="stSidebar"] input,
     section[data-testid="stSidebar"] [data-baseweb="base-input"] {
-        background-color: #f8faff !important;
-        color: #1a1f36 !important;
-        -webkit-text-fill-color: #1a1f36 !important;
-        border: 1px solid #e2e8f0 !important;
+        background-color: #132d5e !important;
+        color: #f0f4ff !important;
+        -webkit-text-fill-color: #f0f4ff !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
         border-radius: 8px !important;
     }
 
     section[data-testid="stSidebar"] [data-baseweb="select"] > div {
-        background-color: #f8faff !important;
-        color: #1a1f36 !important;
-        border: 1px solid #e2e8f0 !important;
+        background-color: #132d5e !important;
+        color: #f0f4ff !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
         border-radius: 8px !important;
     }
 
@@ -151,16 +151,16 @@ st.markdown("""
 
     .stButton > button,
     [data-testid="stDownloadButton"] button {
-        background: linear-gradient(135deg, #2563eb, #6366f1) !important;
-        color: white !important;
-        -webkit-text-fill-color: white !important;
+        background: linear-gradient(135deg, #22d3ee, #22c55e) !important;
+        color: #0a1628 !important;
+        -webkit-text-fill-color: #0a1628 !important;
         border: none !important;
         border-radius: 10px !important;
         font-weight: 600 !important;
         font-size: 0.95rem !important;
         padding: 0.6rem 1.5rem !important;
         transition: all 0.2s ease !important;
-        box-shadow: 0 4px 12px rgba(37,99,235,0.3) !important;
+        box-shadow: 0 4px 12px rgba(34,211,238,0.2) !important;
     }
 
     .stButton > button *,
@@ -168,14 +168,14 @@ st.markdown("""
     .stButton > button span,
     [data-testid="stDownloadButton"] button *,
     [data-testid="stDownloadButton"] button p {
-        color: white !important;
-        -webkit-text-fill-color: white !important;
+        color: #0a1628 !important;
+        -webkit-text-fill-color: #0a1628 !important;
     }
 
     div[data-testid="stMetricValue"],
     div[data-testid="stMetricValue"] * {
-        color: #0f172a !important;
-        -webkit-text-fill-color: #0f172a !important;
+        color: #f0f4ff !important;
+        -webkit-text-fill-color: #f0f4ff !important;
         font-weight: 700 !important;
     }
 
@@ -184,80 +184,79 @@ st.markdown("""
     div[data-testid="stMetricLabel"] p,
     div[data-testid="stMetricLabel"] span,
     div[data-testid="stMetricLabel"] div {
-        color: #0f172a !important;
-        -webkit-text-fill-color: #0f172a !important;
+        color: #94a3b8 !important;
+        -webkit-text-fill-color: #94a3b8 !important;
         font-weight: 600 !important;
         opacity: 1 !important;
         visibility: visible !important;
     }
-            
+
     [data-testid="stMetricLabel"] > div,
     [data-testid="stMetricLabel"] > div > div,
     [data-testid="stMetricLabel"] label {
-        color: #0f172a !important;
-        -webkit-text-fill-color: #0f172a !important;
+        color: #94a3b8 !important;
+        -webkit-text-fill-color: #94a3b8 !important;
         opacity: 1 !important;
     }
 
     div[data-testid="stStatusWidget"],
     [data-testid="stStatus"],
     div[data-testid="stStatus"] {
-        background: linear-gradient(135deg, #dbeafe, #e0e7ff) !important;
-        border: 1px solid #bfdbfe !important;
+        background: rgba(34,211,238,0.08) !important;
+        border: 1px solid rgba(34,211,238,0.2) !important;
         border-radius: 12px !important;
     }
 
     div[data-testid="stStatusWidget"] *,
     [data-testid="stStatus"] *,
     div[data-testid="stStatus"] * {
-        color: #1e40af !important;
-        -webkit-text-fill-color: #1e40af !important;
+        color: #22d3ee !important;
+        -webkit-text-fill-color: #22d3ee !important;
     }
 
     [data-testid="stExpander"] {
-        border: 1px solid #e8edf5 !important;
+        border: 1px solid rgba(255,255,255,0.06) !important;
         border-radius: 10px !important;
-        background: white !important;
+        background: #0f2140 !important;
         overflow: visible !important;
     }
 
     [data-testid="stExpander"] summary {
-        background: white !important;
+        background: #0f2140 !important;
         border-radius: 10px !important;
         padding: 0.8rem 1rem !important;
     }
 
     [data-testid="stExpander"] summary *,
     [data-testid="stExpander"] summary p {
-        color: #1a1f36 !important;
-        -webkit-text-fill-color: #1a1f36 !important;
+        color: #f0f4ff !important;
+        -webkit-text-fill-color: #f0f4ff !important;
     }
 
     [data-baseweb="popover"],
     [data-baseweb="menu"] {
-        background-color: white !important;
+        background-color: #0f2140 !important;
     }
 
     [data-baseweb="option"] {
-        background-color: white !important;
-        color: #1a1f36 !important;
+        background-color: #0f2140 !important;
+        color: #f0f4ff !important;
     }
 
     h1, h2, h3 {
-        color: #0f172a !important;
+        color: #f0f4ff !important;
     }
 
     .alert-critical {
-        background: #fff5f5;
+        background: rgba(239,68,68,0.08);
         border-left: 4px solid #ef4444;
         border-radius: 10px;
         padding: 1rem 1.2rem;
         margin: 0.6rem 0;
-        box-shadow: 0 1px 3px rgba(239,68,68,0.1);
     }
 
     .alert-high {
-        background: #fff8f0;
+        background: rgba(249,115,22,0.08);
         border-left: 4px solid #f97316;
         border-radius: 10px;
         padding: 1rem 1.2rem;
@@ -265,7 +264,7 @@ st.markdown("""
     }
 
     .alert-medium {
-        background: #fefce8;
+        background: rgba(234,179,8,0.08);
         border-left: 4px solid #eab308;
         border-radius: 10px;
         padding: 1rem 1.2rem;
@@ -274,29 +273,28 @@ st.markdown("""
 
     .alert-title {
         font-weight: 700;
-        color: #0f172a;
+        color: #f0f4ff;
         font-size: 0.95rem;
         margin-bottom: 0.3rem;
     }
 
     .alert-meta {
         font-size: 0.85rem;
-        color: #64748b;
+        color: #94a3b8;
         margin: 0.15rem 0;
     }
 
     .digest-container {
-        background: white;
-        border: 1px solid #e8edf5;
+        background: #0f2140;
+        border: 1px solid rgba(255,255,255,0.06);
         border-radius: 16px;
         padding: 2rem;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
     .source-badge {
         display: inline-block;
-        background: #eff6ff;
-        color: #2563eb;
+        background: rgba(34,211,238,0.1);
+        color: #22d3ee;
         font-size: 0.75rem;
         font-weight: 600;
         padding: 0.2rem 0.6rem;
@@ -305,7 +303,7 @@ st.markdown("""
     }
 
     .hero-section {
-        background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 40%, #dbeafe 100%);
+        background: linear-gradient(135deg, #0f2140 0%, #132d5e 40%, #0e3a5e 100%);
         border-radius: 20px;
         padding: 4rem 3rem;
         margin-bottom: 2rem;
@@ -319,10 +317,10 @@ st.markdown("""
         height: 400px;
         border-radius: 50%;
         filter: blur(80px);
-        opacity: 0.4;
+        opacity: 0.3;
         top: -100px;
         right: -100px;
-        background: radial-gradient(circle, #93c5fd, #6366f1);
+        background: radial-gradient(circle, #22d3ee, #22c55e);
     }
 
     .hero-blob-2 {
@@ -331,30 +329,30 @@ st.markdown("""
         height: 300px;
         border-radius: 50%;
         filter: blur(60px);
-        opacity: 0.3;
+        opacity: 0.2;
         bottom: -80px;
         left: 200px;
-        background: radial-gradient(circle, #bfdbfe, #a5b4fc);
+        background: radial-gradient(circle, #22d3ee, #0ea5e9);
     }
 
     .hero-title {
         font-size: 3.2rem;
         font-weight: 800;
-        color: #0f172a;
+        color: #f0f4ff;
         line-height: 1.15;
         margin-bottom: 1.2rem;
         letter-spacing: -0.02em;
     }
 
     .hero-title span {
-        background: linear-gradient(135deg, #2563eb, #6366f1);
+        background: linear-gradient(135deg, #22d3ee, #22c55e);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     .hero-subtitle {
         font-size: 1.15rem;
-        color: #475569;
+        color: #94a3b8;
         line-height: 1.7;
         max-width: 600px;
         margin-bottom: 2rem;
@@ -362,9 +360,9 @@ st.markdown("""
 
     .hero-badge {
         display: inline-block;
-        background: #eff6ff;
-        border: 1px solid #bfdbfe;
-        color: #3b82f6;
+        background: rgba(34,211,238,0.1);
+        border: 1px solid rgba(34,211,238,0.2);
+        color: #22d3ee;
         font-size: 0.8rem;
         font-weight: 600;
         padding: 0.3rem 0.9rem;
@@ -375,30 +373,28 @@ st.markdown("""
     .feature-pill {
         display: inline-flex;
         align-items: center;
-        background: white;
-        border: 1px solid #e2e8f0;
-        color: #334155;
+        background: #0f2140;
+        border: 1px solid rgba(255,255,255,0.08);
+        color: #94a3b8;
         font-size: 0.85rem;
         font-weight: 500;
         padding: 0.4rem 0.9rem;
         border-radius: 100px;
         margin: 0.2rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
     .reg-card {
-        background: white;
-        border: 1px solid #e8edf5;
+        background: #0f2140;
+        border: 1px solid rgba(255,255,255,0.06);
         border-radius: 16px;
         padding: 1.5rem;
         margin-bottom: 1rem;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
     .reg-tag {
         display: inline-block;
-        background: #eff6ff;
-        color: #2563eb;
+        background: rgba(34,211,238,0.1);
+        color: #22d3ee;
         font-size: 0.75rem;
         font-weight: 700;
         padding: 0.25rem 0.7rem;
@@ -706,18 +702,18 @@ def render_regulation_library(areas: list, company_profile: dict):
         st.markdown(f"""
         <div class="reg-card">
             <div class="reg-tag">{meta['emoji']} {area}</div>
-            <div style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.3rem;">
+            <div style="font-size: 1.1rem; font-weight: 700; color: #f0f4ff; margin-bottom: 0.3rem;">
                 {meta['full_name']}
             </div>
             <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 1rem;">
                 In force: {meta['effective']}
             </div>
-            <div style="color: #475569; font-size: 0.9rem; line-height: 1.7; margin-bottom: 1rem;">
+            <div style="color: #94a3b8; font-size: 0.9rem; line-height: 1.7; margin-bottom: 1rem;">
                 {explainer.replace(chr(10), '<br>')}
             </div>
             <div style="margin-top: 1rem;">
                 <a href="{meta['link']}" target="_blank"
-                   style="color: #2563eb; font-size: 0.85rem; font-weight: 500;">
+                   style="color: #22d3ee; font-size: 0.85rem; font-weight: 500;">
                     📄 Read the full regulation →
                 </a>
             </div>
@@ -732,7 +728,7 @@ with st.sidebar:
 
     st.markdown("""
     <div style="padding: 1rem 0 0.5rem 0;">
-        <div style="font-size: 1.8rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;">
+        <div style="font-size: 1.8rem; font-weight: 800; color: #f0f4ff; letter-spacing: -0.02em;">
             🛡️ Vigil
         </div>
         <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 500; margin-top: 0.2rem;">
@@ -774,7 +770,7 @@ with st.sidebar:
                     text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
             Sources monitored
         </div>
-        <div style="font-size: 0.82rem; color: #475569; line-height: 1.8;">
+        <div style="font-size: 0.82rem; color: #94a3b8; line-height: 1.8;">
             EUR-Lex · EDPB · GDPR.eu<br>
             National regulators (DE, PL, FR…)
         </div>
@@ -896,31 +892,31 @@ with tab1:
         col1, col2, col3 = st.columns(3)
         with col1:
             st.markdown("""
-            <div style="background:white;border:1px solid #e8edf5;border-radius:16px;
+            <div style="background:#0f2140;border:1px solid rgba(255,255,255,0.06);border-radius:16px;
                         padding:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
                 <div style="font-size:2rem;margin-bottom:0.8rem;">⚡</div>
-                <div style="font-weight:700;color:#0f172a;margin-bottom:0.5rem;">Real-time monitoring</div>
-                <div style="color:#64748b;font-size:0.88rem;line-height:1.6;">
+                <div style="font-weight:700;color:#f0f4ff;margin-bottom:0.5rem;">Real-time monitoring</div>
+                <div style="color:#94a3b8;font-size:0.88rem;line-height:1.6;">
                     Vigil scrapes EUR-Lex, EDPB, and national regulators – so you never miss a change.
                 </div>
             </div>""", unsafe_allow_html=True)
         with col2:
             st.markdown("""
-            <div style="background:white;border:1px solid #e8edf5;border-radius:16px;
+            <div style="background:#0f2140;border:1px solid rgba(255,255,255,0.06);border-radius:16px;
                         padding:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
                 <div style="font-size:2rem;margin-bottom:0.8rem;">🎯</div>
-                <div style="font-weight:700;color:#0f172a;margin-bottom:0.5rem;">Personalized to your business</div>
-                <div style="color:#64748b;font-size:0.88rem;line-height:1.6;">
+                <div style="font-weight:700;color:#f0f4ff;margin-bottom:0.5rem;">Personalized to your business</div>
+                <div style="color:#94a3b8;font-size:0.88rem;line-height:1.6;">
                     Enter your industry, country, and regulatory areas. Vigil filters everything irrelevant.
                 </div>
             </div>""", unsafe_allow_html=True)
         with col3:
             st.markdown("""
-            <div style="background:white;border:1px solid #e8edf5;border-radius:16px;
+            <div style="background:#0f2140;border:1px solid rgba(255,255,255,0.06);border-radius:16px;
                         padding:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
                 <div style="font-size:2rem;margin-bottom:0.8rem;">🗣️</div>
-                <div style="font-weight:700;color:#0f172a;margin-bottom:0.5rem;">No legal jargon</div>
-                <div style="color:#64748b;font-size:0.88rem;line-height:1.6;">
+                <div style="font-weight:700;color:#f0f4ff;margin-bottom:0.5rem;">No legal jargon</div>
+                <div style="color:#94a3b8;font-size:0.88rem;line-height:1.6;">
                     Every regulation explained in plain English, with concrete next steps.
                 </div>
             </div>""", unsafe_allow_html=True)
@@ -928,9 +924,9 @@ with tab1:
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("""
         <div style="text-align:center;color:#94a3b8;font-size:0.8rem;padding:1rem;">
-            Built at <strong style="color:#475569;">GenAI Zurich Hackathon 2026</strong> 🇨🇭 ·
-            Powered by <strong style="color:#475569;">Apify</strong> ·
-            <strong style="color:#475569;">OpenRouter</strong> ·
-            <strong style="color:#475569;">Claude</strong>
+            Built at <strong style="color:#94a3b8;">GenAI Zurich Hackathon 2026</strong> 🇨🇭 ·
+            Powered by <strong style="color:#94a3b8;">Apify</strong> ·
+            <strong style="color:#94a3b8;">OpenRouter</strong> ·
+            <strong style="color:#94a3b8;">Claude</strong>
         </div>
         """, unsafe_allow_html=True)

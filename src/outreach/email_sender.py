@@ -94,7 +94,7 @@ def send_subscription_email(company: dict, risks: list):
 
     company_name = company.get("name", "Your Company")
     app_url = os.getenv("APP_URL", "https://v0-vigil-landing-page-eight.vercel.app")
-    streamlit_url = os.getenv("STREAMLIT_URL", "https://vigil-demo.streamlit.app")
+    skill_url = os.getenv("SKILL_URL", "https://allesgrau.github.io/vigil_genAI-hackathon-2026/vigil-skill.html")
 
     # Generate compliance report with Claude
     print(f"Generating compliance report for {company_name}...")
@@ -137,7 +137,7 @@ def send_subscription_email(company: dict, risks: list):
                 Install the <strong>/vigil</strong> skill for Claude Code — it checks your source code,
                 documents, and infrastructure for GDPR, AI Act, NIS2, DORA, and PSD2 violations.
             </p>
-            <a href="{streamlit_url}" style="display: inline-block; background: #166534; color: white;
+            <a href="{skill_url}" style="display: inline-block; background: #166534; color: white;
                padding: 10px 24px; text-decoration: none; border-radius: 6px; font-weight: 600;
                font-size: 0.9rem;">
                 Install /vigil Skill

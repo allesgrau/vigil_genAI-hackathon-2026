@@ -32,74 +32,53 @@ st.markdown("""
     header[data-testid="stHeader"] { display: none !important; }
     section[data-testid="stSidebar"] { display: none !important; }
 
-    .step-box {
-        background: #0f2140;
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 12px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 0.8rem;
-    }
-    .step-box.active {
-        border-color: #22d3ee;
-        box-shadow: 0 0 20px rgba(34, 211, 238, 0.1);
-    }
-    .step-box.done {
-        border-color: #22c55e;
-    }
-
-    .step-header {
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        margin-bottom: 0.4rem;
-    }
-    .step-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.85rem;
-        font-weight: 700;
-    }
-    .step-icon.find { background: rgba(34, 211, 238, 0.15); color: #22d3ee; }
-    .step-icon.warn { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-    .step-icon.report { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-    .step-icon.protect { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
-
-    .step-title {
-        font-weight: 700;
-        font-size: 1rem;
-    }
-    .step-detail {
-        color: #94a3b8;
-        font-size: 0.85rem;
-        margin-left: 2.8rem;
-    }
-    .step-metric {
-        display: inline-block;
-        background: rgba(255,255,255,0.05);
-        padding: 0.2rem 0.7rem;
-        border-radius: 6px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin-right: 0.5rem;
-        margin-top: 0.3rem;
-    }
-
     .log-entry {
         font-family: 'JetBrains Mono', 'Fira Code', monospace;
-        font-size: 0.78rem;
-        line-height: 1.8;
-        color: #64748b;
-        padding: 0.3rem 0;
+        font-size: 0.82rem;
+        line-height: 1.9;
+        color: #94a3b8;
+        padding: 0.35rem 0.5rem;
         border-bottom: 1px solid rgba(255,255,255,0.03);
     }
-    .log-entry .time { color: #475569; }
+    .log-entry .time { color: #475569; font-size: 0.75rem; }
     .log-entry .ok { color: #22c55e; }
     .log-entry .info { color: #22d3ee; }
     .log-entry .warn { color: #f59e0b; }
+
+    .pipeline-bar {
+        display: flex;
+        gap: 0;
+        margin-bottom: 1.5rem;
+    }
+    .pipeline-step {
+        flex: 1;
+        padding: 0.8rem 1rem;
+        text-align: center;
+        font-size: 0.82rem;
+        font-weight: 600;
+        border-bottom: 3px solid rgba(255,255,255,0.06);
+        color: #475569;
+        transition: all 0.3s;
+    }
+    .pipeline-step.done {
+        color: #22c55e;
+        border-bottom-color: #22c55e;
+    }
+    .pipeline-step.active {
+        color: #22d3ee;
+        border-bottom-color: #22d3ee;
+    }
+    .pipeline-step.waiting {
+        color: #475569;
+        border-bottom-color: rgba(255,255,255,0.06);
+    }
+    .pipeline-step .step-label {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 400;
+        margin-top: 0.2rem;
+        opacity: 0.7;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -107,7 +86,7 @@ st.markdown("""
 # ── Header ───────────────────────────────────────────────────────────────
 
 st.markdown("""
-<div style="text-align:center; padding: 1.5rem 0 1rem;">
+<div style="text-align:center; padding: 1.5rem 0 0.5rem;">
     <h1 style="color:#22d3ee; font-size:1.8rem; margin:0; letter-spacing:0.05em;">
         VIGIL <span style="color:#94a3b8; font-weight:400;">Pipeline Monitor</span>
     </h1>
@@ -122,25 +101,13 @@ st.markdown("""
 
 DB_PATH = "vigil.db"
 
-def get_outreach_log():
+def get_pipeline_logs():
     try:
         conn = sqlite3.connect(DB_PATH)
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
-            "SELECT o.*, c.name, c.industry, c.country FROM outreach_log o "
-            "LEFT JOIN companies c ON o.company_id = c.id "
-            "ORDER BY o.attempted_at DESC LIMIT 20"
+            "SELECT * FROM pipeline_log ORDER BY id DESC LIMIT 50"
         ).fetchall()
-        conn.close()
-        return [dict(r) for r in rows]
-    except Exception:
-        return []
-
-def get_companies():
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        rows = conn.execute("SELECT * FROM companies ORDER BY discovered_at DESC").fetchall()
         conn.close()
         return [dict(r) for r in rows]
     except Exception:
@@ -160,175 +127,71 @@ def get_call_scripts():
     except Exception:
         return []
 
-# Load data
-logs = get_outreach_log()
-companies = get_companies()
+pipeline_logs = get_pipeline_logs()
 scripts = get_call_scripts()
 
-# Load facts if available
-facts_path = os.path.join("demo", "pre_scraped_facts.json")
-facts = []
-try:
-    with open(facts_path) as f:
-        facts = json.load(f)
-except Exception:
-    pass
+# Determine pipeline status from LATEST run only
+# Find the most recent "PIPELINE started" entry and only count tags after it
+latest_start_id = 0
+for entry in pipeline_logs:
+    if entry.get("tag") == "PIPELINE" and "started" in entry.get("message", "").lower():
+        latest_start_id = entry.get("id", 0)
+        break
 
-# Load alert
-alert_path = os.path.join("demo", "mock_alert.json")
-alert = {}
-try:
-    with open(alert_path) as f:
-        alert = json.load(f)
-except Exception:
-    pass
-
-# Count stats
-total_calls = len([l for l in logs if l.get("channel") == "voice"])
-total_emails = len([l for l in logs if l.get("channel") == "email"])
-completed_calls = len([l for l in logs if l.get("status") == "completed"])
-reg_facts = [f for f in facts if f.get("regulation")]
+recent_logs = [e for e in pipeline_logs if e.get("id", 0) >= latest_start_id] if latest_start_id else []
+recent_tags = set(e.get("tag", "") for e in recent_logs)
+has_scrape = "SCRAPE" in recent_tags
+has_extract = "EXTRACT" in recent_tags or "FACT" in recent_tags
+has_registry = "REGISTRY" in recent_tags
+has_match = "RISK" in recent_tags or "MATCH" in recent_tags
+has_call = "CALL" in recent_tags
+has_report = any(e.get("tag") == "PIPELINE" and "complete" in e.get("message", "").lower() for e in recent_logs)
 
 
-st.markdown("<br>", unsafe_allow_html=True)
+# ── Pipeline status bar ─────────────────────────────────────────────────
 
+def step_class(done):
+    return "done" if done else "waiting"
 
-# ── Pipeline steps ───────────────────────────────────────────────────────
-
-col_pipeline, col_log = st.columns([3, 2])
-
-with col_pipeline:
-    st.markdown("### Pipeline Activity")
-
-    # FIND — Regulations
-    has_facts = len(reg_facts) > 0
-    st.markdown(f"""
-    <div class="step-box {'done' if has_facts else ''}">
-        <div class="step-header">
-            <div class="step-icon find">{'✓' if has_facts else '1'}</div>
-            <div class="step-title" style="color:#22d3ee;">FIND — Regulatory Sources</div>
-        </div>
-        <div class="step-detail">
-            {'Scraped EUR-Lex, EDPB, and national regulators via Apify' if has_facts else 'Waiting for pipeline run...'}
-            <br>
-            <span class="step-metric" style="color:#22d3ee;">{len(reg_facts)} regulatory facts</span>
-            <span class="step-metric" style="color:#22d3ee;">3 regulations (GDPR, AI Act, PSD2)</span>
-        </div>
+st.markdown(f"""
+<div class="pipeline-bar">
+    <div class="pipeline-step {step_class(has_scrape)}">
+        {"✓" if has_scrape else "1"} FIND
+        <span class="step-label">Scrape sources</span>
     </div>
-    """, unsafe_allow_html=True)
-
-    # FIND — Registries
-    has_companies = len(companies) > 0
-    st.markdown(f"""
-    <div class="step-box {'done' if has_companies else ''}">
-        <div class="step-header">
-            <div class="step-icon find">{'✓' if has_companies else '1'}</div>
-            <div class="step-title" style="color:#22d3ee;">FIND — Business Registries</div>
-        </div>
-        <div class="step-detail">
-            {'Scraped business registries and identified companies at risk' if has_companies else 'Waiting for pipeline run...'}
-            <br>
-            {''.join(f'<span class="step-metric" style="color:#22d3ee;">{c["name"]} ({c.get("industry", "?")})</span>' for c in companies[:3])}
-        </div>
+    <div class="pipeline-step {step_class(has_registry)}">
+        {"✓" if has_registry else "2"} DISCOVER
+        <span class="step-label">Business registries</span>
     </div>
-    """, unsafe_allow_html=True)
-
-    # MATCH
-    has_alert = bool(alert)
-    severity = alert.get("severity", "high").upper() if alert else ""
-    sev_color = "#ef4444" if severity == "CRITICAL" else "#f59e0b" if severity == "HIGH" else "#ca8a04"
-    st.markdown(f"""
-    <div class="step-box {'done' if has_alert else ''}">
-        <div class="step-header">
-            <div class="step-icon warn">{'✓' if has_alert else '2'}</div>
-            <div class="step-title" style="color:#f59e0b;">MATCH — Risk Analysis</div>
-        </div>
-        <div class="step-detail">
-            {'Claude matched companies to regulatory risks' if has_alert else 'Waiting for facts...'}
-            <br>
-            {f'<span class="step-metric" style="color:{sev_color};">[{severity}] {alert.get("regulation", "")} {alert.get("article", "")}</span>' if has_alert else ''}
-            {f'<span class="step-metric" style="color:{sev_color};">{alert.get("days_remaining", "?")} days remaining</span>' if has_alert else ''}
-        </div>
+    <div class="pipeline-step {step_class(has_match)}">
+        {"✓" if has_match else "3"} MATCH
+        <span class="step-label">Risk analysis</span>
     </div>
-    """, unsafe_allow_html=True)
-
-    # WARN
-    has_calls = total_calls > 0
-    st.markdown(f"""
-    <div class="step-box {'done' if has_calls else ''}">
-        <div class="step-header">
-            <div class="step-icon warn">{'✓' if has_calls else '3'}</div>
-            <div class="step-title" style="color:#f59e0b;">WARN — Automated Outreach</div>
-        </div>
-        <div class="step-detail">
-            {'Automated compliance alerts delivered' if has_calls else 'Waiting for risk match...'}
-            <br>
-            <span class="step-metric" style="color:#f59e0b;">{total_calls} call{'s' if total_calls != 1 else ''} placed</span>
-            <span class="step-metric" style="color:#ef4444;">{total_emails} report{'s' if total_emails != 1 else ''} sent</span>
-        </div>
+    <div class="pipeline-step {step_class(has_call)}">
+        {"✓" if has_call else "4"} WARN
+        <span class="step-label">Compliance call</span>
     </div>
-    """, unsafe_allow_html=True)
-
-    # REPORT
-    st.markdown(f"""
-    <div class="step-box {'done' if total_emails > 0 else ''}">
-        <div class="step-header">
-            <div class="step-icon report">{'✓' if total_emails > 0 else '4'}</div>
-            <div class="step-title" style="color:#ef4444;">REPORT — Compliance Reports</div>
-        </div>
-        <div class="step-detail">
-            {'Claude-generated compliance reports with legal citations, auditor warnings, and action steps' if total_emails > 0 else 'Reports generated when recipient presses 1 during call'}
-            <br>
-            <span class="step-metric" style="color:#ef4444;">{total_emails} report{'s' if total_emails != 1 else ''} delivered</span>
-        </div>
+    <div class="pipeline-step {step_class(has_report)}">
+        {"✓" if has_report else "5"} REPORT
+        <span class="step-label">Email report</span>
     </div>
-    """, unsafe_allow_html=True)
-
-    # PROTECT
-    st.markdown(f"""
-    <div class="step-box">
-        <div class="step-header">
-            <div class="step-icon protect">5</div>
-            <div class="step-title" style="color:#22c55e;">PROTECT — Code Scanning</div>
-        </div>
-        <div class="step-detail">
-            Engineers type <code>/vigil</code> in Claude Code to scan their codebase for compliance issues.
-            <br>
-            <span class="step-metric" style="color:#22c55e;">10 risk categories</span>
-            <span class="step-metric" style="color:#22c55e;">GDPR, AI Act, NIS2, DORA, PSD2</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
 
-# ── Activity log ─────────────────────────────────────────────────────────
+# ── Main content: Logs (wide) + Call Script (side) ──────────────────────
+
+col_log, col_script = st.columns([3, 1])
 
 with col_log:
-    st.markdown("### Scraping Regulatory Sources & Business Registries")
+    st.markdown("### Live Pipeline Log")
 
-    # Read live pipeline logs from SQLite
-    def get_pipeline_logs():
-        try:
-            conn = sqlite3.connect(DB_PATH)
-            conn.row_factory = sqlite3.Row
-            rows = conn.execute(
-                "SELECT * FROM pipeline_log ORDER BY id DESC LIMIT 50"
-            ).fetchall()
-            conn.close()
-            return [dict(r) for r in rows]
-        except Exception:
-            return []
-
-    pipeline_logs = get_pipeline_logs()
-
-    # Icon mapping for tags
     tag_icons = {
         "PIPELINE": "🚀", "SCRAPE": "🌐", "EXTRACT": "📄", "FACT": "🧠",
         "REGISTRY": "🏢", "MATCH": "🔍", "RISK": "⚠️", "SCRIPT": "📝",
         "CALL": "📞", "REPORT": "📧",
     }
 
-    # Render in scrollable container
     if pipeline_logs:
         log_html = ""
         for entry in pipeline_logs:
@@ -346,43 +209,56 @@ with col_log:
             )
 
         container_html = (
-            '<div style="max-height:480px;overflow-y:auto;padding:1rem;'
-            'border:1px solid rgba(255,255,255,0.04);border-radius:10px;'
-            f'background:rgba(0,0,0,0.15);">{log_html}</div>'
+            '<div style="max-height:600px;overflow-y:auto;padding:1rem 1.2rem;'
+            'border:1px solid rgba(255,255,255,0.04);border-radius:12px;'
+            f'background:rgba(0,0,0,0.2);">{log_html}</div>'
         )
         st.markdown(container_html, unsafe_allow_html=True)
     else:
         st.markdown(
-            '<div style="color:#64748b;text-align:center;padding:2rem;">'
-            'No activity yet. Run the orchestrator to see live updates.<br>'
-            '<code style="color:#22d3ee;">python src/outreach/orchestrator.py</code>'
+            '<div style="color:#475569;text-align:center;padding:4rem 2rem;'
+            'border:1px solid rgba(255,255,255,0.04);border-radius:12px;'
+            'background:rgba(0,0,0,0.2);font-size:0.95rem;">'
+            '⏳ Waiting for pipeline...<br><br>'
+            '<span style="color:#64748b;font-size:0.82rem;">'
+            'Run <code style="color:#22d3ee;">python src/outreach/orchestrator.py</code> '
+            'to see live activity</span>'
             '</div>',
             unsafe_allow_html=True,
         )
 
-    # Latest call script
+with col_script:
+    st.markdown("### Latest Call Script")
     if scripts:
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("### Latest Call Script")
         latest = scripts[0]
-        st.markdown(f"""
-        <div style="background:#0f2140; border:1px solid rgba(245,158,11,0.2);
-                    border-radius:10px; padding:1.2rem; font-size:0.85rem;
-                    color:#f59e0b; line-height:1.7; font-style:italic;">
-            "{latest.get('script', 'No script available')}"
-        </div>
-        <p style="color:#64748b; font-size:0.75rem; margin-top:0.5rem;">
-            Generated for {latest.get('name', '?')} at {(latest.get('created_at', ''))[:19]}
-        </p>
-        """, unsafe_allow_html=True)
+        script_html = (
+            f'<div style="background:#0f2140;border:1px solid rgba(245,158,11,0.2);'
+            f'border-radius:12px;padding:1.2rem;font-size:0.88rem;'
+            f'color:#f59e0b;line-height:1.8;font-style:italic;">'
+            f'"{latest.get("script", "No script available")}"'
+            f'</div>'
+            f'<p style="color:#64748b;font-size:0.72rem;margin-top:0.5rem;">'
+            f'Generated for {latest.get("name", "?")} at {(latest.get("created_at", ""))[:19]}'
+            f'</p>'
+        )
+        st.markdown(script_html, unsafe_allow_html=True)
+    else:
+        st.markdown(
+            '<div style="color:#475569;text-align:center;padding:2rem;'
+            'border:1px solid rgba(255,255,255,0.04);border-radius:12px;'
+            'background:rgba(0,0,0,0.2);font-size:0.85rem;">'
+            '📝 Call script will appear here when generated'
+            '</div>',
+            unsafe_allow_html=True,
+        )
 
 
 # ── Footer ───────────────────────────────────────────────────────────────
 
 st.markdown("""
-<div style="text-align:center; color:#475569; font-size:0.75rem; padding:2rem; margin-top:2rem;
+<div style="text-align:center; color:#475569; font-size:0.75rem; padding:2rem; margin-top:1rem;
             border-top:1px solid rgba(255,255,255,0.04);">
-    Vigil Pipeline Monitor — real-time system activity<br>
-    Auto-refreshes with each page load · <a href="" target="_self" style="color:#22d3ee;">Refresh now</a>
+    Vigil Pipeline Monitor &middot; auto-refreshes every 5 seconds &middot;
+    <a href="" target="_self" style="color:#22d3ee;">Refresh now</a>
 </div>
 """, unsafe_allow_html=True)

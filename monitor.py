@@ -7,6 +7,7 @@ Usage:
 """
 
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 import sqlite3
 import json
 import os
@@ -17,6 +18,9 @@ st.set_page_config(
     page_icon="⚡",
     layout="wide",
 )
+
+# Auto-refresh every 5 seconds
+st_autorefresh(interval=5000, key="monitor_refresh")
 
 # ── CSS ──────────────────────────────────────────────────────────────────
 
@@ -316,69 +320,44 @@ with col_pipeline:
 with col_log:
     st.markdown("### Scraping Regulatory Sources & Business Registries")
 
-    # Build a unified technical log from all available data
-    tech_logs = []
+    # Read live pipeline logs from SQLite
+    def get_pipeline_logs():
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute(
+                "SELECT * FROM pipeline_log ORDER BY id DESC LIMIT 50"
+            ).fetchall()
+            conn.close()
+            return [dict(r) for r in rows]
+        except Exception:
+            return []
 
-    # Add scraping/extraction logs from facts
-    if facts:
-        regs_found = set()
-        for f in facts:
-            reg = f.get("regulation", "")
-            if reg and reg not in regs_found:
-                regs_found.add(reg)
-                tech_logs.append(("info", "🌐", "SCRAPE", f"Crawling regulatory source for {reg}"))
-                tech_logs.append(("ok", "📄", "EXTRACT", f"Extracted {len([x for x in facts if x.get('regulation') == reg])} compliance facts from {reg}"))
+    pipeline_logs = get_pipeline_logs()
 
-        tech_logs.append(("ok", "🧠", "MATCH", f"Claude analyzed {len(reg_facts)} regulatory facts across {len(regs_found)} regulations"))
-
-    # Add company discovery logs
-    for c in companies:
-        tech_logs.append(("info", "🏢", "REGISTRY", f"Discovered {c.get('name', '?')} ({c.get('industry', '?')}, {c.get('country', '?')})"))
-
-    # Add risk matching from alert
-    if alert:
-        severity = alert.get("severity", "high").upper()
-        tech_logs.append(("warn", "⚠️", "RISK", f"[{severity}] {alert.get('regulation', '')} {alert.get('article', '')} — {alert.get('days_remaining', '?')} days remaining"))
-
-    # Add outreach logs (calls and emails)
-    for log in logs:
-        time_str = log.get("attempted_at", "")[:19] if log.get("attempted_at") else ""
-        channel = log.get("channel", "?")
-        status = log.get("status", "?")
-        company_name = log.get("name", log.get("company_id", "?"))
-        regulation = log.get("regulation", "")
-
-        if channel == "voice":
-            icon = "📞"
-            tag = "CALL"
-            color_class = "info"
-        elif channel == "email":
-            icon = "📧"
-            tag = "REPORT"
-            color_class = "ok"
-        else:
-            icon = "📋"
-            tag = "LOG"
-            color_class = "info"
-
-        status_color = "ok" if status in ("completed", "sent") else "warn" if status in ("initiated", "queued") else "info"
-        detail = f"{company_name} [{status}]"
-        if regulation:
-            detail += f" ({regulation})"
-        if time_str:
-            detail = f"<span class='time'>{time_str}</span> {detail}"
-
-        tech_logs.append((status_color, icon, tag, detail))
-
-    # Add script generation log
-    if scripts:
-        tech_logs.append(("ok", "📝", "SCRIPT", f"Generated call script for {scripts[0].get('name', '?')}"))
+    # Icon mapping for tags
+    tag_icons = {
+        "PIPELINE": "🚀", "SCRAPE": "🌐", "EXTRACT": "📄", "FACT": "🧠",
+        "REGISTRY": "🏢", "MATCH": "🔍", "RISK": "⚠️", "SCRIPT": "📝",
+        "CALL": "📞", "REPORT": "📧",
+    }
 
     # Render in scrollable container
-    if tech_logs:
+    if pipeline_logs:
         log_html = ""
-        for color_class, icon, tag, detail in tech_logs:
-            log_html += f'<div class="log-entry">{icon} <span class="{color_class}" style="font-weight:600;">[{tag}]</span> {detail}</div>'
+        for entry in pipeline_logs:
+            tag = entry.get("tag", "LOG")
+            message = entry.get("message", "")
+            color = entry.get("color", "info")
+            time_str = entry.get("created_at", "")[:19]
+            icon = tag_icons.get(tag, "📋")
+
+            log_html += (
+                f'<div class="log-entry">'
+                f'<span class="time">{time_str}</span> {icon} '
+                f'<span class="{color}" style="font-weight:600;">[{tag}]</span> {message}'
+                f'</div>'
+            )
 
         container_html = (
             '<div style="max-height:480px;overflow-y:auto;padding:1rem;'

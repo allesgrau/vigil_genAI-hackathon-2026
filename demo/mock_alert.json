@@ -1,7 +1,7 @@
 {
   "regulation": "AI Act",
-  "article": "Article 5 - Prohibited AI Practices",
-  "days_remaining": 1095,
-  "action_required": "TechStartup GmbH must ensure that it does not use any AI systems that engage in prohibited practices, such as harmful AI-based manipulation, as defined in the AI Act. The company must perform a thorough assessment of its AI systems and take necessary actions to comply with the AI Act before the rules for high-risk AI systems come into effect in August 2026 and August 2027.",
+  "article": "Article 5 (Prohibited AI Practices)",
+  "days_remaining": 365,
+  "action_required": "TechStartup GmbH must review its AI systems and practices to ensure they do not violate the prohibitions under Article 5 of the AI Act, which include harmful AI-based manipulation and exploitation of vulnerable individuals.",
   "severity": "critical"
 }

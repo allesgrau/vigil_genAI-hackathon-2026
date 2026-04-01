@@ -15,5 +15,8 @@ numpy==1.26.4
 # PDF generation
 reportlab>=4.0.0
 
+# Streamlit
+streamlit-autorefresh>=1.0.0
+
 # Utils
 python-dotenv==1.0.1

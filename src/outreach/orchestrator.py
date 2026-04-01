@@ -70,10 +70,12 @@ def _get_llm_client() -> OpenAI:
 
 # ── Step 1: Scrape legislation ──────────────────────────────────────────
 
-def step_scrape_legislation(apify_client: ApifyClient) -> list[dict]:
+def step_scrape_legislation(apify_client: ApifyClient, db: Database) -> list[dict]:
     """Scrape 1 legislative page with Apify and extract facts with Claude."""
     _print_step(1, 5, "FIND", "Scraping EU regulatory source")
     _print_detail("URL", REGULATION_URL)
+
+    db.log_pipeline("SCRAPE", f"Crawling regulatory source: {REGULATION_URL.split('/')[2]}", "info")
 
     print("    Launching Apify website-content-crawler...")
     run = apify_client.actor("apify/website-content-crawler").call(
@@ -99,9 +101,11 @@ def step_scrape_legislation(apify_client: ApifyClient) -> list[dict]:
             })
 
     print(f"    Scraped {len(documents)} document(s)")
+    db.log_pipeline("SCRAPE", f"Scraped {len(documents)} regulatory document(s)", "ok")
 
     if not documents:
         print("    [WARN] No documents scraped — using pre-scraped facts as fallback")
+        db.log_pipeline("SCRAPE", "No documents found — using pre-scraped facts", "warn")
         facts_path = os.path.join(DEMO_DIR, "pre_scraped_facts.json")
         with open(facts_path) as f:
             return json.load(f)
@@ -109,16 +113,19 @@ def step_scrape_legislation(apify_client: ApifyClient) -> list[dict]:
     # Chunk and extract facts
     print("    Chunking...")
     chunks = chunk_documents(documents)
+    db.log_pipeline("EXTRACT", f"Chunked into {len(chunks)} segments, sending to Claude...", "info")
     print(f"    Extracting facts with Claude...")
 
     profile = {"areas_of_concern": ["AI Act", "GDPR", "PSD2"], "test_mode": True}
     facts = extract_facts(chunks, profile)
     print(f"    -> {len(facts)} regulatory facts extracted")
+    db.log_pipeline("EXTRACT", f"Extracted {len(facts)} regulatory facts with Claude", "ok")
 
     for fact in facts[:3]:
         reg = fact.get("regulation", "?")
         sev = fact.get("severity", "?").upper()
         print(f"      [{sev}] {reg}: {fact['claim'][:80]}...")
+        db.log_pipeline("FACT", f"[{sev}] {reg}: {fact['claim'][:80]}", "ok")
 
     return facts
 
@@ -129,6 +136,8 @@ def step_scrape_registry(apify_client: ApifyClient, db: Database) -> dict | None
     """Scrape 1 registry page, extract company info with Claude, save to DB."""
     _print_step(2, 5, "FIND", "Scraping business registry")
     _print_detail("URL", REGISTRY_URL)
+
+    db.log_pipeline("SCRAPE", f"Crawling business registry: {REGISTRY_URL.split('/')[2]}", "info")
 
     print("    Launching Apify website-content-crawler...")
     run = apify_client.actor("apify/website-content-crawler").call(
@@ -150,10 +159,14 @@ def step_scrape_registry(apify_client: ApifyClient, db: Database) -> dict | None
 
     if not page_content:
         print("    [WARN] No registry data scraped — using seed company from DB")
+        db.log_pipeline("SCRAPE", "No registry data — using seed company", "warn")
         return db.get_company("test-001")
+
+    db.log_pipeline("SCRAPE", "Scraped business registry page", "ok")
 
     # Extract company info with Claude
     print("    Extracting company info with Claude...")
+    db.log_pipeline("EXTRACT", "Extracting company info with Claude...", "info")
     llm = _get_llm_client()
 
     response = llm.chat.completions.create(
@@ -200,6 +213,7 @@ PAGE CONTENT:
     }
 
     db.add_company(company)
+    db.log_pipeline("REGISTRY", f"Discovered {company['name']} ({company.get('industry', '?')}, {company.get('country', '?')})", "ok")
 
     _print_detail("Company found", company["name"])
     _print_detail("Industry", company.get("industry", "?"))
@@ -213,12 +227,15 @@ PAGE CONTENT:
 
 # ── Step 3: Alert matching with Claude ───────────────────────────────────
 
-def step_match_risks(company: dict, facts: list[dict]) -> dict:
+def step_match_risks(company: dict, facts: list[dict], db: Database) -> dict:
     """Use Claude to match company profile against extracted facts → generate alert."""
     _print_step(3, 5, "MATCH", "Matching company to regulatory risks")
 
+    db.log_pipeline("MATCH", f"Matching {company['name']} against {len(facts)} regulatory facts...", "info")
+
     if not facts:
         print("    No facts to match — using fallback alert")
+        db.log_pipeline("MATCH", "No facts — using fallback alert", "warn")
         return FALLBACK_ALERT
 
     llm = _get_llm_client()
@@ -270,6 +287,10 @@ Return ONLY a JSON object:
         _print_detail("Deadline", f"{alert.get('days_remaining', '?')} days")
         _print_detail("Action", alert["action_required"][:80])
 
+        severity = alert.get("severity", "high").upper()
+        color = "warn" if severity in ("CRITICAL", "HIGH") else "info"
+        db.log_pipeline("RISK", f"[{severity}] {alert['regulation']} {alert.get('article', '')} — {alert.get('days_remaining', '?')} days remaining", color)
+
         # Save alert to demo dir for webhook to use
         alert_path = os.path.join(DEMO_DIR, "mock_alert.json")
         with open(alert_path, "w") as f:
@@ -280,6 +301,7 @@ Return ONLY a JSON object:
 
     except Exception as e:
         print(f"    [WARN] Matching failed ({e}) — using fallback alert")
+        db.log_pipeline("MATCH", f"Matching failed — using fallback alert", "warn")
         return FALLBACK_ALERT
 
 
@@ -292,7 +314,9 @@ def step_outreach_call(company: dict, alert: dict, db: Database) -> dict:
     _print_detail("Regulation", f"{alert['regulation']} {alert.get('article', '')}")
     print()
 
+    db.log_pipeline("SCRIPT", f"Generating call script for {company['name']}...", "info")
     result = make_outreach_call(company, alert, db)
+    db.log_pipeline("CALL", f"Called {company['name']} — [{result['status']}]", "ok" if result["status"] == "completed" else "warn")
     db.log_outreach(company["id"], "voice", result["status"], alert["regulation"])
     return result
 
@@ -332,23 +356,27 @@ def run_pipeline():
     apify_client = ApifyClient(token)
     db = Database("vigil.db")
 
+    db.log_pipeline("PIPELINE", "Vigil pipeline started", "info")
+
     # 1. Scrape legislation (live Apify crawl → Claude fact extraction)
-    facts = step_scrape_legislation(apify_client)
+    facts = step_scrape_legislation(apify_client, db)
 
     # 2. Scrape business registry (live Apify crawl → Claude company extraction)
     company = step_scrape_registry(apify_client, db)
     if not company:
         print("\n  ERROR: No company found. Exiting.")
+        db.log_pipeline("PIPELINE", "Pipeline failed — no company found", "warn")
         sys.exit(1)
 
     # 3. Match company to risks (Claude LLM matching)
-    alert = step_match_risks(company, facts)
+    alert = step_match_risks(company, facts, db)
 
     # 4. Outreach call (Claude script generation + Twilio voice)
     result = step_outreach_call(company, alert, db)
 
     # 5. Summary
     step_summary(company, alert)
+    db.log_pipeline("PIPELINE", "Pipeline complete — waiting for keypress to send report", "ok")
 
 
 if __name__ == "__main__":

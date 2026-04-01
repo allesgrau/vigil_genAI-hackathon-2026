@@ -44,6 +44,14 @@ class Database:
                 created_at TEXT,
                 FOREIGN KEY (company_id) REFERENCES companies(id)
             );
+
+            CREATE TABLE IF NOT EXISTS pipeline_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                tag TEXT NOT NULL,
+                message TEXT NOT NULL,
+                color TEXT DEFAULT 'info',
+                created_at TEXT
+            );
         """)
 
     def add_company(self, company: dict):
@@ -114,5 +122,18 @@ class Database:
     def get_active_subscribers(self) -> list[dict]:
         rows = self.conn.execute(
             "SELECT c.* FROM companies c JOIN subscriptions s ON c.id = s.company_id WHERE s.status = 'active'"
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def log_pipeline(self, tag: str, message: str, color: str = "info"):
+        self.conn.execute("""
+            INSERT INTO pipeline_log (tag, message, color, created_at)
+            VALUES (?, ?, ?, ?)
+        """, (tag, message, color, datetime.now().isoformat()))
+        self.conn.commit()
+
+    def get_pipeline_logs(self, limit: int = 50) -> list[dict]:
+        rows = self.conn.execute(
+            "SELECT * FROM pipeline_log ORDER BY id DESC LIMIT ?", (limit,)
         ).fetchall()
         return [dict(r) for r in rows]

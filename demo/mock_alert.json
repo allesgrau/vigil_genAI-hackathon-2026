@@ -1,7 +1,7 @@
 {
   "regulation": "AI Act",
-  "article": "Articles 5 and 6",
+  "article": "Prohibited AI practices (Articles 5-8)",
   "days_remaining": 90,
-  "action_required": "TechStartup GmbH must ensure it is not engaging in any of the eight prohibited AI practices, such as untargeted scraping of the internet or CCTV material to create or expand facial recognition databases. The company must also classify its AI systems as high-risk and ensure they comply with the strict obligations before putting them on the market.",
+  "action_required": "TechStartup GmbH must immediately review its AI systems and practices to ensure compliance with the prohibited AI practices defined in the AI Act, as certain prohibited practices such as harmful AI-based manipulation could pose serious risks to the safety, livelihoods, and rights of people.",
   "severity": "critical"
 }

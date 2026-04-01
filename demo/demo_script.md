@@ -40,8 +40,11 @@ to my phone."
 
 [PHONE RINGS — you pick up on speaker. Twilio trial message plays.]
 
+[Twilio calls from a Romanion number — add text overlay in CapCut:
+"Yes, the call is coming from a Romanian number — that's what you get with Twilio's free tier."]
+
 [Twilio trial message plays — add text overlay in CapCut:
-"Twilio free trial disclaimer — hackathon budget 😅"]
+"Again, Twilio free trial disclaimer — hackathon budget..."]
 
 [Vigil's voice plays the 15-second compliance alert. You press 1.]
 
@@ -71,13 +74,9 @@ and a concrete fix."
 
 ## [1:40–1:55] DASHBOARD — Show: Streamlit dashboard, digest tab, regulation library
 
-"Compliance officers get a personalized dashboard. The digest doesn't just
-list what changed — it explains what it means for your business and provides
-strategic insights tailored to your company profile.
+"The business owner gets a personalized dashboard. It doesn't just list what changed — it explains what it means for the business and provides strategic insights tailored to the company's profile.
 
-The regulation library breaks down GDPR, the AI Act, NIS2, DORA, and PSD2
-in plain language — no legal jargon, written specifically for your industry
-and country."
+The regulation library breaks down regulations in plain language — no legal jargon, written specifically for your industry and country."
 
 ## [1:55–2:00] CLOSE — Show: Hub page or landing page
 

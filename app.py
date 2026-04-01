@@ -552,7 +552,7 @@ def render_alerts(output: dict):
     medium = output.get("medium_alerts", [])
 
     if not critical and not high and not medium:
-        st.success("✅ No urgent alerts this month – you're compliant!")
+        st.markdown('<div style="background:#22c55e;border-radius:10px;padding:1rem 1.2rem;color:#ffffff;font-weight:600;">✅ No urgent alerts this month — you\'re compliant!</div>', unsafe_allow_html=True)
         return
 
     for alert in critical:
@@ -802,7 +802,6 @@ with tab1:
         else:
             cached = _load_cache(company_profile)
             if cached and test_mode:
-                st.info("⚡ Loaded from cache – instant results!")
                 output = cached
             else:
                 output = asyncio.run(run_vigil(company_profile))

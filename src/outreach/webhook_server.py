@@ -27,17 +27,12 @@ async def handle_voice(company_id: str = Query(...)):
     response = VoiceResponse()
 
     if script:
-        response.say(script, voice="Google.en-US-Neural2-F", language="en-US")
-        response.say(
-            "Press 1 if you'd like us to send you a detailed report by email.",
-            voice="Google.en-US-Neural2-F",
-            language="en-US",
-        )
         gather = response.gather(
             num_digits=1,
             action=f"/webhook/gather-response?company_id={company_id}",
             timeout=5,
         )
+        gather.say(script, voice="Google.en-US-Neural2-F", language="en-US")
         response.say("Thank you for your time. Goodbye.",
                       voice="Google.en-US-Neural2-F", language="en-US")
     else:

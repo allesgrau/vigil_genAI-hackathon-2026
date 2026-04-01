@@ -190,20 +190,6 @@ completed_calls = len([l for l in logs if l.get("status") == "completed"])
 reg_facts = [f for f in facts if f.get("regulation")]
 
 
-# ── Metrics row ──────────────────────────────────────────────────────────
-
-col1, col2, col3, col4, col5 = st.columns(5)
-with col1:
-    st.metric("Regulatory sources", "15+", help="EUR-Lex, EDPB, national regulators")
-with col2:
-    st.metric("Facts extracted", str(len(reg_facts)) if reg_facts else "12")
-with col3:
-    st.metric("Companies discovered", str(len(companies)))
-with col4:
-    st.metric("Calls placed", str(total_calls))
-with col5:
-    st.metric("Reports sent", str(total_emails))
-
 st.markdown("<br>", unsafe_allow_html=True)
 
 

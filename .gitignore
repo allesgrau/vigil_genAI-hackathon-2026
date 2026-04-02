@@ -211,3 +211,7 @@ cache/
 .streamlit/secrets.toml
 src/storage/
 storage/
+vigil.db
+*.lnk
+venv_old/
+deliverables/recordings/

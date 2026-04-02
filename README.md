@@ -6,7 +6,9 @@
 Built at **GenAI Zürich Hackathon 2026** · Powered by **Apify** · **Claude** · **Twilio** · **SendGrid**
 
 🔗 **Hub:** [allesgrau.github.io/vigil_genAI-hackathon-2026](Mo)
+
 🔗 **Dashboard:** [vigil-demo.streamlit.app](https://vigil-demo.streamlit.app/)
+
 🔗 **Pipeline Monitor:** [vigil-monitor.streamlit.app](https://vigil-monitor.streamlit.app/)
 
 ![Vigil Hub](deliverables/screenshots/vigil_hub.png)
@@ -112,6 +114,7 @@ vigil_genAI-hackathon-2026/
 ├── server.py                       # FastAPI webhook server
 ├── skill/
 │   └── vigil-compliance.md         # /vigil Claude Code skill definition
+├── .actor/                         # Apify Actor metadata
 ├── landing/                        # Landing page + skill installation page
 ├── docs/                           # GitHub Pages deployment
 ├── deliverables/
@@ -121,7 +124,9 @@ vigil_genAI-hackathon-2026/
 ├── demo/                           # Demo scripts and seed data
 ├── tests/
 │   └── test_vigil.py               # Integration tests (real API calls)
+├── Dockerfile
 ├── requirements.txt
+├── requirements-dev.txt
 ├── .env.example
 └── README.md
 ```

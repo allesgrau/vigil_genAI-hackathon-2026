@@ -11,6 +11,8 @@ Built at **GenAI Zürich Hackathon 2026** · Powered by **Apify** · **Claude** 
 
 🔗 **Pipeline Monitor:** [vigil-monitor.streamlit.app](https://vigil-monitor.streamlit.app/)
 
+*There may be a problem with the sound. In this case, check "mute" and then uncheck it.*
+
 🔗 **Vigil 2-min Video:** [Google Drive](https://drive.google.com/file/d/1ZMMt4X3khE7k8-oswB_m96rSKZM3gQHp/view?usp=sharing)
 
 🔗 **Full Call Video:** [Google Drive](https://drive.google.com/file/d/15MmlepznvEVHeBbweOicvnCb-bIbzYt7/view?usp=sharing)

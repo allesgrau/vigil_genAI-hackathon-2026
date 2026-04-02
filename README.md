@@ -5,7 +5,7 @@
 
 Built at **GenAI Zürich Hackathon 2026** · Powered by **Apify** · **Claude** · **Twilio** · **SendGrid**
 
-🔗 **Hub:** [allesgrau.github.io/vigil_genAI-hackathon-2026](Mo)
+🔗 **Hub:** [allesgrau.github.io/vigil_genAI-hackathon-2026](https://allesgrau.github.io/vigil_genAI-hackathon-2026/)
 
 🔗 **Dashboard:** [vigil-demo.streamlit.app](https://vigil-demo.streamlit.app/)
 

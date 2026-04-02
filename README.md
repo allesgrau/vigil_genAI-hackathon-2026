@@ -11,9 +11,9 @@ Built at **GenAI Zürich Hackathon 2026** · Powered by **Apify** · **Claude** 
 
 🔗 **Pipeline Monitor:** [vigil-monitor.streamlit.app](https://vigil-monitor.streamlit.app/)
 
-🔗 **Vigil 2-min Video:** [Google Drive](https://drive.google.com/file/d/1DS6rZap78MRUWfYQZ1NXUFvo-FZ6rrxH/view?usp=sharing)
+🔗 **Vigil 2-min Video:** [Google Drive](https://drive.google.com/file/d/1ZMMt4X3khE7k8-oswB_m96rSKZM3gQHp/view?usp=sharing)
 
-🔗 **Full Call Video:** [Google Drive](https://drive.google.com/file/d/1UuG1AqalJsmXISe5YjGAIGhOD_AEjhIy/view?usp=sharing)
+🔗 **Full Call Video:** [Google Drive](https://drive.google.com/file/d/15MmlepznvEVHeBbweOicvnCb-bIbzYt7/view?usp=sharing)
 
 ![Vigil Hub](deliverables/screenshots/vigil_hub.png)
 
